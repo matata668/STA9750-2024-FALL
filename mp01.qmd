@@ -1,8 +1,31 @@
-```{r}
-if(!require("tidyverse")) install.packages("tidyverse")
+---
+title: MiniProject01
+---
+
+### Introduction
+
+Hi there, in this project we focus on the usage of  **Public Transit System** usage across the various metro areas of the United States.
+To make the proper analysis we extracted the data from [The National Transit Database](https://www.transit.dot.gov/ntd).Leveraging data
+sets that track key metrics such as passenger trips, vehicle revenue miles (VRM), total fares, and operational expenses, the project
+provides insights into how public transportation systems adapted during unprecedented times such as COVID. One key area of exploration is
+the significant change in ridership due to direct and indirect factors experienced and by major transit systems, such as New York City's
+subway, comparing pre-pandemic and pandemic periods. The analysis uncovers changes in transit system performance, farebox recovery
+ratios, and usage patterns, offering a comprehensive view of the transportation landscape. Through data-driven exploration, the project
+aims to provide transit authorities, policymakers, and the public with actionable insights on the resilience and challenges faced by
+public transportation during a global health crisis. 
+
+
+Let us begin with downloading, cleaning, and joining tables from the various data we have found in the data set. 
+
+```{r echo=TRUE, message=FALSE, warning=FALSE}
 
 # Let's start with Fare Revenue
+
 library(tidyverse)
+library(DT)
+library(dplyr)
+library(readr)
+
 if(!file.exists("2022_fare_revenue.xlsx")){
     # This should work _in theory_ but in practice it's still a bit finicky
     # If it doesn't work for you, download this file 'by hand' in your
@@ -43,7 +66,7 @@ if(!file.exists("2022_expenses.csv")){
                   method="wget")
 }
 EXPENSES <- readr::read_csv("2022_expenses.csv") |>
-    select(`NTD ID`, 
+    select(`NTD ID`,
            `Agency`,
            `Total`, 
            `Mode`) |>
@@ -55,7 +78,7 @@ EXPENSES <- readr::read_csv("2022_expenses.csv") |>
 
 FINANCIALS <- inner_join(FARES, EXPENSES, join_by(`NTD ID`, `Mode`))
 # Monthly Transit Numbers
-library(tidyverse)
+
 if(!file.exists("ridership.xlsx")){
     # This should work _in theory_ but in practice it's still a bit finicky
     # If it doesn't work for you, download this file 'by hand' in your
@@ -95,6 +118,8 @@ MILES <- readxl::read_xlsx("ridership.xlsx", sheet="VRM") |>
             ungroup() |>
             mutate(month=my(month)) # Parse _m_onth _y_ear date specs
 
+#This creates the tables as follows:
+
 USAGE <- inner_join(TRIPS, MILES) |>
     mutate(`NTD ID` = as.integer(`NTD ID`))
 if(!require("DT")) install.packages("DT")
@@ -105,19 +130,27 @@ sample_n(USAGE, 1000) |>
     DT::datatable()
 
 ```
+
+Q. Rename a column: UZA Name to metro_area
+
 ```{r}
-#1. Rename a column: UZA Name to metro_area
-
 USAGE <- USAGE |> 
-  rename(metro_area = "UZA Name")
+  rename(metro_area = "UZA Name") # Renamed the column "UZA Name" to "metro_area" as per the question
 
-sample_n(USAGE, 1000) |> 
+sample_n(USAGE, 1000) |>  #allows us to take random of 1000 samples from rows USAGE dataset
   mutate(month = as.character(month)) |> 
-  DT::datatable()
+  DT::datatable() #display the data in an intractable format
 
 ```
+
+Using the codes above we have now renamed the column "UZA Name" to "metro_area" and displayed in an intractable format. 
+
+### Task 2: Recording the Mode Column
+---
+
+For this second task we are recoding the `Mode` column. We first identified the interpretation of these codes using the [National Transit Database](https://www.transit.dot.gov/ntd) and connected to the USAGE table created above. 
+
 ```{r}
-#Task2: REcording the Mode Column
 
 USAGE <- USAGE |>
     mutate(Mode=case_when(
@@ -143,16 +176,17 @@ USAGE <- USAGE |>
         TRUE ~ "Unknown"))
 ```
 ```{r}
-library(DT)
 sample_n(USAGE, 1000) |> 
     mutate(month=as.character(month)) |> 
     DT::datatable()
 ```
-```{r}
-library(DT)
-library(dplyr)
 
-USAGE_Drop <- USAGE |>
+Now that our data is cleaner and concise, we can proceed with the analysis. We will also drop the 'NTD ID' and '3 Mode' columns using the 
+subtraction symbol (-) and rename the UPT and VRM columns using the rename function, as shown below. 
+
+```{r}
+
+USAGE_Drop <- USAGE |> #USAGE_DROP is a new variable given for the table after dropping and renaming the columns
   select(-`NTD ID`, -`3 Mode`) |>
   rename( Passenger_Trips = UPT,
           Vehicle_Revenue_Mile = VRM)
@@ -160,31 +194,42 @@ sample_n(USAGE_Drop, 1000) |>
     mutate(month=as.character(month)) |> 
     DT::datatable()
 ```
-```{r}
-#Task 3: 
-#1. What transit agency had the most total VRM in our data set?
 
-top_agency <- USAGE_Drop |>
+### Task 3:
+---
+
+Q1. What transit agency had the most total VRM in our data set?
+
+```{r}
+top_agency <- USAGE_Drop |> 
   group_by(Agency) |>
-  summarize(Total_VRM = sum(Vehicle_Revenue_Mile, na.rm = TRUE)) |>
+  summarize(Total_VRM = sum(Vehicle_Revenue_Mile, na.rm = TRUE)) |> #calculating the total for all agencies
   arrange(desc(Total_VRM)) |>
-  slice(1)
+  slice(1)   #prints the top most data
 
 print(top_agency)
 ```
+**Conclusion**: The transit agency with the most total **Vehicle Revenue Miles (VRM)** in the dataset is **MTA New York City Transit**, with **10,832,855,350 miles**. 
+---
+
+Q2. What transit mode had the most total VRM in our data set?
+
 ```{r}
-#2. What transit mode had the most total VRM in our data set?
+
 top_mode <- USAGE_Drop |>
-  group_by(Mode) |>
-  summarize(Total_VRM = sum(Vehicle_Revenue_Mile, na.rm = TRUE)) |>
-  arrange(desc(Total_VRM)) |>
+  group_by(Mode) |>   #for this we have grouped with Mode as per the question
+  summarize(Total_VRM = sum(Vehicle_Revenue_Mile, na.rm = TRUE)) |>  #sum of VRM from all agencies
+  arrange(desc(Total_VRM)) |> #we want to arrange in decending order to print the highest value and use slice to get the 1st data.    
   slice(1)
 
 print(top_mode)
 ```
-```{r}
-#3. How many trips were taken on the NYC Subway (Heavy Rail) in May 2024?
+**Conclusion** : The transit mode with the most total **Vehicle Revenue Miles (VRM)** in the dataset is **Motorbus**, with **49,444,494,088 miles**, highlighting its dominant role in public transit operations by covering the greatest distance in revenue-generating services.
+---
 
+Q3. How many trips were taken on the NYC Subway (Heavy Rail) in May 2024?
+
+```{r}
 
 total_nyc_trips <- USAGE_Drop |>
 
@@ -196,35 +241,48 @@ total_nyc_trips <- USAGE_Drop |>
    slice(1)
 print(total_nyc_trips)
 ```
+**Conclusion** : A total of **180,458,819 trips** were taken on the NYC Subway (Heavy Rail) under MTA New York City Transit in May 2024.
+---
 
+Q5. How much did NYC subway ridership fall between April 2019 and April 2020?
 
 ```{r}
-#5. How much did NYC subway ridership fall between April 2019 and April 2020?
-#I am still working on this one. My apologies.
+USAGE_Drop <- USAGE_Drop |> 
+  mutate(month = as.Date(month, format = "%Y-%m-%d")) #I did this to set the date in yyyy-mm-dd format
 
 ridership_2019 <- USAGE_Drop |>
   filter(Agency == "MTA New York City Transit",
-         month == 2019-04-01)   |>
-  summarize(total_ridership_2019 = sum(Passenger_Trips), na.rm = TRUE )
+         month >= as.Date("2019-04-01") & month <= as.Date("2019-04-30")) |> #we are using the & function to calculate the whole month
+  summarize(total_ridership_2019 = sum(Passenger_Trips, na.rm = TRUE)) #sum of the passenger_Trips in April 2019
 
 print(ridership_2019)
 
 
-#ridership_2020 <- USAGE_Drop |>
-  #filter(Agency == "MTA New York City Transit",
-         #month  == 2019-04-01 )  |>
-  #summarize(total_ridership_2020 = sum(Passenger_Trips), na.rm = TRUE )
+ridership_2020 <- USAGE_Drop |>
+  filter(Agency == "MTA New York City Transit",
+         month >= as.Date("2020-04-01") & month <= as.Date("2020-04-30")) |> #we have used the greaterthan and less than function to create the range
+  summarize(total_ridership_2020 = sum(Passenger_Trips, na.rm = TRUE)) #sum of the passenger_Trips in April 2020
+
+print(ridership_2020)
+
 
 #fall_in_ridership= 2020-2019
-#fall_ridership <- ridership_2020$total_ridership_2020 - ridership_2019$total_ridership_2019
 
-#print(fall_ridership)
+fall_ridership <- ridership_2020$total_ridership_2020 - ridership_2019$total_ridership_2019
+
+print(fall_ridership)
 
 ```
+**Conclusion** 
+---
+
+### Task4: intresting facts
+---
+
+Q1. which month has the most Motorbus usage in 2020?
+
 ```{r}
-#Task4. intresting facts
-#4.a
-# which month has the most Motorbus usage in 2020
+
 
 most_motorbus_usage_2020 <- USAGE_Drop |>
   filter(year(month) == 2020, 
@@ -242,9 +300,13 @@ print(most_motorbus_usage_2020)
 
 
 ```  
+**Conclusion** : The month with the highest Motorbus usage in 2020 is **January**, with a total of **356,666,383** trips.
+---
+
+Qb. Change in MTA user in Feb2020 and March2020 to observe the impact of COVID in the use of public transportation.
+
 ```{r}
-#4.b
-#  Change in MTA user in Feb2020 and March2020 to observe the impact of COVID in the use of public transportation.
+
 
 mta_nyc_covid_analysis <- USAGE_Drop |>
 
@@ -255,38 +317,43 @@ mta_nyc_covid_analysis <- USAGE_Drop |>
   group_by(month) |>
   
   summarize(total_passenger_trips = sum(Passenger_Trips, na.rm = TRUE)) |>
-  
+  mutate(percentage_change = (total_passenger_trips - lag(total_passenger_trips)) / lag(total_passenger_trips) * 100) |>
   ungroup()
 
 print(mta_nyc_covid_analysis)
 
 
 ```
+**Conclusion**: The **MTA** experienced a **44.04% decrease** in public transportation usage, from **284,100,296** trips in February 2020 to **158,996,127** trips in March 2020, due to the peak of the COVID-19 pandemic in NYC.
+
+Qc.which metro area has highest number of passenger trip 2021?
 
 ```{r}
-#4.c
-# which metro area has highest number of passenger trip 2021
 
 metro_area_highest_passenger_trip_2021 <- USAGE_Drop |>
-  filter(year(month) == 2021) |>
+      filter(year(month) == 2021) |>
   
-  group_by(metro_area) |>
+      group_by(metro_area) |>
   
-  summarize(total_passenger_trips = sum(Passenger_Trips, na.rm = TRUE)) |>
+      summarize(total_passenger_trips = sum(Passenger_Trips, na.rm = TRUE)) |>
 
-  arrange(desc(total_passenger_trips)) |>
+      arrange(desc(total_passenger_trips)) |>
   
-  slice(1) |>
+      slice(1) |>
   
-  ungroup()
+      ungroup()
 
 print(metro_area_highest_passenger_trip_2021)
 
 
 ```
 
+---
+
+### Task 5
+---
+
 ```{r}
-#Task 5
 
 USAGE_2022_ANNUAL <- USAGE |>
   filter(year(month) == 2022) |>
@@ -297,7 +364,7 @@ USAGE_2022_ANNUAL <- USAGE |>
   ) |>
   ungroup()
 print(USAGE_2022_ANNUAL)
-view(USAGE_2022_ANNUAL)
+view(USAGE_2022_ANNUAL) #this allows me to view my table in another tab easily
 
 ```
 
