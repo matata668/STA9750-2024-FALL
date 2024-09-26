@@ -5,29 +5,11 @@ author: Aachal Ghimire
 
 ### Introduction
 
-Hi there, in this project we focus on the usage of **Public Transit
-System** usage across the various metro areas of the United States. To
-make the proper analysis we extracted the data from [The National
-Transit Database](https://www.transit.dot.gov/ntd).Leveraging data sets
-that track key metrics such as passenger trips, vehicle revenue miles
-(VRM), total fares, and operational expenses, the project provides
-insights into how public transportation systems adapted during
-unprecedented times such as COVID. One key area of exploration is the
-significant change in ridership due to direct and indirect factors
-experienced and by major transit systems, such as New York City's
-subway, comparing pre-pandemic and pandemic periods. The analysis
-uncovers changes in transit system performance, farebox recovery ratios,
-and usage patterns, offering a comprehensive view of the transportation
-landscape. Through data-driven exploration, the project aims to provide
-transit authorities, policymakers, and the public with actionable
-insights on the resilience and challenges faced by public transportation
-during a global health crisis.
+Hi there, in this project we focus on the usage of **Public Transit System** usage across the various metro areas of the United States. To make the proper analysis we extracted the data from [The National Transit Database](https://www.transit.dot.gov/ntd).Leveraging data sets that track key metrics such as passenger trips, vehicle revenue miles (VRM), total fares, and operational expenses, the project provides insights into how public transportation systems adapted during unprecedented times such as COVID. One key area of exploration is the significant change in ridership due to direct and indirect factors experienced and by major transit systems, such as New York City's subway, comparing pre-pandemic and pandemic periods. The analysis uncovers changes in transit system performance, farebox recovery ratios, and usage patterns, offering a comprehensive view of the transportation landscape. Through data-driven exploration, the project aims to provide transit authorities, policymakers, and the public with actionable insights on the resilience and challenges faced by public transportation during a global health crisis.
 
-Let us begin with downloading, cleaning, and joining tables from the
-various data we have found in the data set.
+Let us begin with downloading, cleaning, and joining tables from the various data we have found in the data set.
 
-### Libraries used
----
+## \### Libraries used
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -157,15 +139,11 @@ sample_n(USAGE, 1000) |>  #allows us to take random of 1000 samples from rows US
 
 ```
 
-Using the codes above we have now renamed the column "UZA Name" to
-"metro_area" and displayed in an intractable format.
+Using the codes above we have now renamed the column "UZA Name" to "metro_area" and displayed in an intractable format.
 
 ### Task 2: Recording the Mode Column
 
-For this second task we are recoding the `Mode` column. We first
-identified the interpretation of these codes using the [National Transit
-Database](https://www.transit.dot.gov/ntd) and connected to the USAGE
-table created above.
+For this second task we are recoding the `Mode` column. We first identified the interpretation of these codes using the [National Transit Database](https://www.transit.dot.gov/ntd) and connected to the USAGE table created above.
 
 ```{r}
 
@@ -199,10 +177,7 @@ sample_n(USAGE, 1000) |>
     DT::datatable()
 ```
 
-Now that our data is cleaner and concise, we can proceed with the
-analysis. We will also drop the 'NTD ID' and '3 Mode' columns using the
-subtraction symbol (-) and rename the UPT and VRM columns using the
-rename function, as shown below.
+Now that our data is cleaner and concise, we can proceed with the analysis. We will also drop the 'NTD ID' and '3 Mode' columns using the subtraction symbol (-) and rename the UPT and VRM columns using the rename function, as shown below.
 
 ```{r}
 
@@ -231,7 +206,6 @@ print(top_agency)
 
 **Conclusion**: The transit agency with the most total **Vehicle Revenue Miles (VRM)** in the dataset is **MTA New York City Transit**, with **10,832,855,350 miles**.
 
-
 Q2. What transit mode had the most total VRM in our data set?
 
 ```{r}
@@ -247,9 +221,7 @@ print(top_mode)
 
 **Conclusion** : The transit mode with the most total **Vehicle Revenue Miles (VRM)** in the dataset is **Motorbus**, with **49,444,494,088 miles**, highlighting its dominant role in public transit operations by covering the greatest distance in revenue-generating services.
 
-
-Q3. How many trips were taken on the NYC Subway (Heavy Rail) in May
-2024?
+Q3. How many trips were taken on the NYC Subway (Heavy Rail) in May 2024?
 
 ```{r}
 
@@ -266,9 +238,7 @@ print(total_nyc_trips)
 
 **Conclusion** : A total of **180,458,819 trips** were taken on the NYC Subway (Heavy Rail) under MTA New York City Transit in May 2024.
 
-
-Q5. How much did NYC subway ridership fall between April 2019 and April
-2020?
+Q5. How much did NYC subway ridership fall between April 2019 and April 2020?
 
 ```{r}
 USAGE_Drop <- USAGE_Drop |> 
@@ -298,8 +268,7 @@ print(fall_ridership)
 
 ```
 
-**Conclusion**: NYC subway ridership fell by **87.92%** between April 2019 and April 2020, likely due to the impact of the COVID-19 pandemic.
----
+## **Conclusion**: NYC subway ridership fell by **87.92%** between April 2019 and April 2020, likely due to the impact of the COVID-19 pandemic.
 
 ### Task4: intresting facts
 
@@ -324,11 +293,9 @@ print(most_motorbus_usage_2020)
 
 ```
 
-**Conclusion** : The month with the highest Motorbus usage in 2020 is **January**, with a total of **356,666,383** trips.
----
+## **Conclusion** : The month with the highest Motorbus usage in 2020 is **January**, with a total of **356,666,383** trips.
 
-Q2. Change in MTA user in Feb2020 and March2020 to observe the impact of
-COVID in the use of public transportation.
+Q2. Change in MTA user in Feb2020 and March2020 to observe the impact of COVID in the use of public transportation.
 
 ```{r}
 mta_nyc_covid_analysis <- USAGE_Drop |>
@@ -344,11 +311,7 @@ mta_nyc_covid_analysis <- USAGE_Drop |>
 print(mta_nyc_covid_analysis)
 ```
 
-**Conclusion**: The **MTA** experienced a **44.04% decrease** in public
-transportation usage, from **284,100,296** trips in February 2020 to
-**158,996,127** trips in March 2020, due to the peak of the COVID-19
-pandemic in NYC.
-
+**Conclusion**: The **MTA** experienced a **44.04% decrease** in public transportation usage, from **284,100,296** trips in February 2020 to **158,996,127** trips in March 2020, due to the peak of the COVID-19 pandemic in NYC.
 
 Q3.Which metro area has highest number of passenger trip 2021?
 
@@ -372,14 +335,11 @@ print(metro_area_highest_passenger_trip_2021)
 
 ```
 
-**Conclusion**: The metro area with the highest number of passenger trips in 2021 is **New York--Jersey City--Newark, NY--NJ**, with a total of **2,120,004,458** trips.
----
+## **Conclusion**: The metro area with the highest number of passenger trips in 2021 is **New York--Jersey City--Newark, NY--NJ**, with a total of **2,120,004,458** trips.
 
 ### Task 5
 
-We are now creating a new table using the USAGE table we created at the
-beginning. We used the filter, grou_by, summarize, rename function to
-get our desired table
+We are now creating a new table using the USAGE table we created at the beginning. We used the filter, grou_by, summarize, rename function to get our desired table
 
 ```{r}
 
@@ -427,9 +387,7 @@ FINANCIALS <- FINANCIALS |>
   
 ```
 
-we are now merging the tables USAGE_2022_ANNUAL & FINANCIALS, based on
-the 'NTD ID' and 'Mode' columns, then dropping any rows with missing
-values and displaying the resulting dataset.
+we are now merging the tables USAGE_2022_ANNUAL & FINANCIALS, based on the 'NTD ID' and 'Mode' columns, then dropping any rows with missing values and displaying the resulting dataset.
 
 ```{r}
 USAGE_AND_FINANCIALS <- left_join(
@@ -440,8 +398,7 @@ USAGE_AND_FINANCIALS <- left_join(
 view(USAGE_AND_FINANCIALS)
 ```
 
-### Task 6
----
+## \### Task 6
 
 Q1.Which transit system (agency and mode) had the most UPT in 2022?
 
@@ -462,10 +419,7 @@ print(Most_UPT)
 
 ```
 
-**Conclusion**: The transit system with the highest number of Unlinked
-Passenger Trips (UPT) in 2022 was **MTA New York City Transit (Heavy
-Rail)**, with a total of **1,793,073,801 trips**. 
-
+**Conclusion**: The transit system with the highest number of Unlinked Passenger Trips (UPT) in 2022 was **MTA New York City Transit (Heavy Rail)**, with a total of **1,793,073,801 trips**.
 
 Q2. Which transit system (agency and mode) had the highest farebox recovery, defined as the highest ratio of Total Fares to\Expenses?
 
@@ -484,7 +438,6 @@ view(highest_farebox_recovery)
 ```
 
 **Conclusion**: The transit system with the highest farebox recovery ratio is the Transit Authority of Central Kentucky operating in Vanpool mode, with a farebox recovery ratio of **2.38**.
-
 
 Q3. Which transit system (agency and mode) has the lowest expenses per UPT?
 
@@ -507,9 +460,7 @@ view(lowest_expenses_per_upt)
 
 **Conclusion**: The transit system with the lowest expenses per UPT is operated by North Carolina State University in Motorbus mode, with an expense of **1.18 per unlinked passenger trip**.
 
-
-Q4. Which transit system (agency and mode) has the highest total fares
-per UPT?
+Q4. Which transit system (agency and mode) has the highest total fares per UPT?
 
 ```{r}
 
@@ -530,7 +481,6 @@ view(highest_fares_per_upt)
 
 **Conclusion** : The transit system with the highest total fares per UPT is operated by Altoona Metro Transit in Demand Response mode, with total fares of **660.12 per unlinked passenger trip**.
 
-
 Q5. Which transit system (agency and mode) has the lowest expenses per VRM?
 
 ```{r}
@@ -548,8 +498,7 @@ view(lowest_expenses_per_vrm)
 
 ```
 
-**Conclusion**:The transit system with the lowest expenses per VRM is operated by the New Mexico Department of Transportation in Vanpool mode, with an expense of 0.34 per vehicle revenue mile. 
-
+**Conclusion**:The transit system with the lowest expenses per VRM is operated by the New Mexico Department of Transportation in Vanpool mode, with an expense of 0.34 per vehicle revenue mile.
 
 Q6.Which transit system (agency and mode) has the highest total fares per VRM?
 
@@ -570,21 +519,10 @@ view(highest_fares_per_vrm)
 
 ```
 
-**Conclusion**: The transit system with the highest total fares per VRM is operated by Chicago Water Taxi (Wendella) in Ferryboat mode, with total fares of 237.46 per vehicle revenue mile. 
----
+**Conclusion**: The transit system with the highest total fares per VRM is operated by Chicago Water Taxi (Wendella) in Ferryboat mode, with total fares of 237.46 per vehicle revenue mile.
 
 ## Analysis
 
-The most efficient transit system in the country can vary depending on
-how "efficiency" is defined. Based on the analysis of farebox recovery,
-expenses per UPT, and expenses per VRM, I would consider New Mexico
-Department of Transportation's Vanpool system in Las Cruces, NM, to be
-the most efficient in terms of operational cost efficiency (with the
-lowest expenses per VRM at \$0.34). However, if we prioritize revenue
-efficiency, the Chicago Water Taxi (Wendella) emerges as the most
-efficient with the highest fares per VRM (\$237.46), indicating a strong
-ability to generate revenue relative to its operational distance.
+The most efficient transit system in the country can vary depending on how "efficiency" is defined. Based on the analysis of farebox recovery, expenses per UPT, and expenses per VRM, I would consider New Mexico Department of Transportation's Vanpool system in Las Cruces, NM, to be the most efficient in terms of operational cost efficiency (with the lowest expenses per VRM at \$0.34). However, if we prioritize revenue efficiency, the Chicago Water Taxi (Wendella) emerges as the most efficient with the highest fares per VRM (\$237.46), indicating a strong ability to generate revenue relative to its operational distance.
 
-Ultimately, the choice of the most efficient system depends on whether
-cost minimization or revenue generation is considered more important for
-the definition of efficiency.
+Ultimately, the choice of the most efficient system depends on whether cost minimization or revenue generation is considered more important for the definition of efficiency.
