@@ -3,13 +3,13 @@ title: MiniProject01
 author: Aachal Ghimire
 ---
 
-### Introduction
+# Introduction
 
 Hi there, in this project we focus on the usage of **Public Transit System** usage across the various metro areas of the United States. To make the proper analysis we extracted the data from [The National Transit Database](https://www.transit.dot.gov/ntd).Leveraging data sets that track key metrics such as passenger trips, vehicle revenue miles (VRM), total fares, and operational expenses, the project provides insights into how public transportation systems adapted during unprecedented times such as COVID. One key area of exploration is the significant change in ridership due to direct and indirect factors experienced and by major transit systems, such as New York City's subway, comparing pre-pandemic and pandemic periods. The analysis uncovers changes in transit system performance, farebox recovery ratios, and usage patterns, offering a comprehensive view of the transportation landscape. Through data-driven exploration, the project aims to provide transit authorities, policymakers, and the public with actionable insights on the resilience and challenges faced by public transportation during a global health crisis.
 
 Let us begin with downloading, cleaning, and joining tables from the various data we have found in the data set.
 
-## \### Libraries used
+## **Libraries used**
 
 ```{r echo=TRUE, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -127,7 +127,7 @@ sample_n(USAGE, 1000) |>
 
 ```
 
-Q. Rename a column: UZA Name to metro_area
+## Rename a column: UZA Name to metro_area
 
 ```{r}
 USAGE <- USAGE |> 
@@ -141,7 +141,7 @@ sample_n(USAGE, 1000) |>  #allows us to take random of 1000 samples from rows US
 
 Using the codes above we have now renamed the column "UZA Name" to "metro_area" and displayed in an intractable format.
 
-### Task 2: Recording the Mode Column
+## Task 2: Recording the Mode Column
 
 For this second task we are recoding the `Mode` column. We first identified the interpretation of these codes using the [National Transit Database](https://www.transit.dot.gov/ntd) and connected to the USAGE table created above.
 
@@ -190,7 +190,7 @@ sample_n(USAGE_Drop, 1000) |>
     DT::datatable()
 ```
 
-### Task 3:
+## Task 3:
 
 Q1. What transit agency had the most total VRM in our data set?
 
@@ -270,7 +270,7 @@ print(fall_ridership)
 
 **Conclusion**: NYC subway ridership fell by **87.92%** between April 2019 and April 2020, likely due to the impact of the COVID-19 pandemic.
 
-### Task4: intresting facts
+## Task4: intresting facts
 
 Q1. which month has the most Motorbus usage in 2020?
 
@@ -292,6 +292,7 @@ print(most_motorbus_usage_2020)
 
 
 ```
+
 
 **Conclusion** : The month with the highest Motorbus usage in 2020 is **January**, with a total of **356,666,383** trips.
 
@@ -334,9 +335,10 @@ print(metro_area_highest_passenger_trip_2021)
 
 
 ```
+
 **Conclusion**: The metro area with the highest number of passenger trips in 2021 is **New York--Jersey City--Newark, NY--NJ**, with a total of **2,120,004,458** trips.
 
-### Task 5
+## Task 5
 
 We are now creating a new table using the USAGE table we created at the beginning. We used the filter, grou_by, summarize, rename function to get our desired table
 
@@ -397,7 +399,7 @@ USAGE_AND_FINANCIALS <- left_join(
 view(USAGE_AND_FINANCIALS)
 ```
 
-### Task 6
+## Task 6
 
 Q1.Which transit system (agency and mode) had the most UPT in 2022?
 
@@ -459,7 +461,7 @@ view(lowest_expenses_per_upt)
 
 **Conclusion**: The transit system with the lowest expenses per UPT is operated by North Carolina State University in Motorbus mode, with an expense of **1.18 per unlinked passenger trip**.
 
-Q4. Which transit system (agency and mode) has the highest total fares per UPT?
+#### Q4. Which transit system (agency and mode) has the highest total fares per UPT?
 
 ```{r}
 
