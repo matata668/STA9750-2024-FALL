@@ -1,6 +1,8 @@
 ---
 title: MiniProject01
 author: Aachal Ghimire
+format: html
+css: styles.css
 ---
 
 # Introduction
@@ -130,8 +132,10 @@ sample_n(USAGE, 1000) |>
 ## Rename a column: UZA Name to metro_area
 
 ```{r}
+# Renamed the column "UZA Name" to "metro_area" as per the question
+
 USAGE <- USAGE |> 
-  rename(metro_area = "UZA Name") # Renamed the column "UZA Name" to "metro_area" as per the question
+  rename(metro_area = "UZA Name") 
 
 sample_n(USAGE, 1000) |>  #allows us to take random of 1000 samples from rows USAGE dataset
   mutate(month = as.character(month)) |> 
@@ -145,7 +149,7 @@ Using the codes above we have now renamed the column "UZA Name" to "metro_area" 
 
 For this second task we are recoding the `Mode` column. We first identified the interpretation of these codes using the [National Transit Database](https://www.transit.dot.gov/ntd) and connected to the USAGE table created above.
 
-```{r}
+```{r message=FALSE}
 
 USAGE <- USAGE |>
     mutate(Mode=case_when(
