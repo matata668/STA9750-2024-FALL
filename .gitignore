@@ -9,4 +9,7 @@
 *.tsv.gz
 *.csv.zip
 
+MP02.Aachal_cache
+MP02.Aachal_files
+
 .DS_Store
