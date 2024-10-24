@@ -25,10 +25,9 @@ library(ggplot2)
 ```
 
 ## Data
+IMDb_name_basics
 
 ```{r message=FALSE, warning=FALSE, cache=TRUE}
-
-#IMDb_name_basics
 
 get_imdb_file <- function(fname){
     BASE_URL <- "https://datasets.imdbws.com/"
@@ -46,32 +45,32 @@ NAME_BASICS <- read.csv("/Users/aachalghimire/Documents/GitHub/STA9750-2024-FALL
 
 ```
 
+IMDb_titile_basics
 ```{r  message=FALSE, warning=FALSE, cache=TRUE}
-#IMDb_titile_basics
 
 TITLE_BASICS     <- read.csv("/Users/aachalghimire/Documents/GitHub/STA9750-2024-FALL/title_basics_small.csv", header = TRUE, sep = ",")
 ```
 
+IMDb_title_Episodes
 ```{r message=FALSE, warning=FALSE, cache=TRUE}
-#IMDb_title_Episodes
 
 TITLE_EPISODES   <- read.csv("/Users/aachalghimire/Documents/GitHub/STA9750-2024-FALL/title_episodes_small.csv", header = TRUE, sep = ",")
 ```
 
+IMDb_title_ratings
 ```{r message=FALSE, warning=FALSE, cache=TRUE}
-#IMDb_title_ratings
 
 TITLE_RATINGS    <- read.csv("/Users/aachalghimire/Documents/GitHub/STA9750-2024-FALL/title_ratings_small.csv", header = TRUE, sep = ",")
 ```
 
+IMDb_title_crew
 ```{r message=FALSE, warning=FALSE, cache=TRUE}
-#IMDb_title_crew
 
 TITLE_CREW       <- read.csv("/Users/aachalghimire/Documents/GitHub/STA9750-2024-FALL/title_crew_small.csv", header = TRUE, sep = ",")
 ```
 
+IMDb_title_principals
 ```{r message=FALSE, warning=FALSE, cache=TRUE}
-#IMDb_title_principals
 
 TITLE_PRINCIPALS <- read.csv("/Users/aachalghimire/Documents/GitHub/STA9750-2024-FALL/title_principals_small.csv", header = TRUE, sep = ",")
 
@@ -98,6 +97,7 @@ TITLE_RATINGS |>
     scale_y_continuous(label=scales::comma)
 ```
 
+Title_Ratings
 ```{r}
 TITLE_RATINGS |>
     pull(numVotes) |>
@@ -142,6 +142,7 @@ rm(TITLE_EPISODES_2)
 ## Initial Exploration
 
 ```{r}
+
 # Replace `\\N' with NA and then convert into numeric 
 # glimpse() to view the characters 
 NAME_BASICS|> glimpse()
@@ -151,11 +152,11 @@ NAME_BASICS_NA <- NAME_BASICS |>
            deathYear = as.numeric(replace(deathYear, deathYear == "\\N", NA)))
 ```
 
-## Initial Exploration
-
 ### Task 1
 
-```{r warning=FALSE}
+```{r warning=FALSE, echo=TRUE, message=FALSE}
+#| code-fold: true
+#| code-summary: "Show the code"
 # replace "\\N" with NA 
 # changed the charcters for the TITLE table using as.numeric and as.logical 
 library(dplyr)
@@ -177,9 +178,11 @@ TITLE_BASICS_CCOL |> glimpse()
 
 ### Task 2
 
-1.How many movies are in our data set? How many TV series? How many TV episodes?
+1. How many movies are in our data set? How many TV series? How many TV episodes?
 
-```{r}
+```{r echo=TRUE, message=FALSE, warning=FALSE}
+#| code-fold: true
+#| code-summary: "Show the code"
 # filter
 library(dplyr)
 total_count <- TITLE_BASICS_CCOL |>
@@ -191,11 +194,14 @@ total_count <- TITLE_BASICS_CCOL |>
 
 print(total_count)
 ```
-> There are **131662** movies, **155722** tvEpisode, and **29789** tvSeries. 
+>There are **131662** movies, **155722** tvEpisode, and **29789** tvSeries. 
 
 2. Who is the oldest living person in our data set?
 
-```{r}
+```{r echo=TRUE, warning=FALSE, message=FALSE}
+
+#| code-fold: true
+#| code-summary: "Show the code"
 #birthYear is not NA and deathYear is NA
 
 oldest_living_person<- NAME_BASICS_NA |>
@@ -232,7 +238,9 @@ print(oldest_living_person_110)
 
 3. There is one TV Episode in this data set with a perfect 10/10 rating and at least 200,000 IMDb ratings. What is it? What series does it belong to?
 
-```{r}
+```{r echo=TRUE, warning=FALSE, message=FALSE}
+#| code-fold: true
+#| code-summary: "Show the code"
 #inner_join to join tables from TITLE_RATING, TITLE_EPISODES, TITLE_BASICS_CCOL
 #select(-col) to drop unwanted columns 
 
@@ -246,11 +254,13 @@ perfect_rating <- TITLE_RATINGS |>
 print(perfect_rating)
 ```
 
-> **Breaking Bad season 5, episode 14** has the perfect rationg of 10/10 with **229313** rating
+**Breaking Bad season 5, episode 14** has the perfect rationg of 10/10 with **229313** rating
 
 4. What four projects is the actor Mark Hamill most known for?
 
-```{r}
+```{r echo=TRUE, warning=FALSE, message=FALSE}
+#| code-fold: true
+#| code-summary: "Show the code"
 #filter & identify the primary name = Mark Hamill
 # filter and connect the data with tconst
 
@@ -286,7 +296,9 @@ print(Mark_Hamill_Projects)
 
 5. What TV series, with more than 12 episodes, has the highest average rating?
 
-```{r}
+```{r warning=FALSE, echo=TRUE, message=FALSE}
+#| code-fold: true
+#| code-summary: "Show the code"
 
 #calculating episodes for each series and filter >12
 
@@ -325,13 +337,15 @@ print(TVSeries_12eps_rating)
 
 ```
 
-> **Craft Games** among tvShows with total of **318 episodes** has the highest rating of **9.7**
+>**Craft Games** among tvShows with total of **318 episodes** has the highest rating of **9.7**
 
 6. The TV series Happy Days (1974-1984) gives us the common idiom “jump the shark”. The phrase comes from a controversial fifth season episode (aired in 1977) in which a lead character literally jumped over a shark on water skis. Idiomatically, it is used to refer to the moment when a once-great show becomes ridiculous and rapidly looses quality.
 
 Is it true that episodes from later seasons of Happy Days have lower average ratings than the early seasons?
 
-```{r}
+```{r warning=FALSE, message=FALSE, echo=TRUE}
+#| code-fold: true
+#| code-summary: "Show the code"
 
 #calculating all the episodes of Happy Days
 
@@ -355,13 +369,15 @@ print(HappyDays_rating)
 
 ```
 
-> Based on the analysis, we observe a decline in average ratings from early to later seasons. The early seasons had an average rating of 7.58, whereas the later seasons dropped to 6.91. This indicates a noticeable decrease in viewer ratings as the series progressed.
+>Based on the analysis, we observe a decline in average ratings from early to later seasons. The early seasons had an average rating of 7.58, whereas the later seasons dropped to 6.91. This indicates a noticeable decrease in viewer ratings as the series progressed.
 
 ## Quantifying Success
 
-## Task 3: custom success matrix
+### Task 3: custom success matrix
 
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
 #adding success rating to TITLE_RATING column
 
 TITLE_RATING_SUCCESS <- TITLE_RATINGS |>
@@ -373,7 +389,9 @@ TITLE_RATING_SUCCESS <- TITLE_RATINGS |>
 
 1. Choose the top 5-10 movies on your metric and confirm that they were indeed box office successes.
 
-```{r}
+```{r message=FALSE, echo=TRUE, warning=FALSE}
+#| code-fold: true
+#| code-summary: "Show the code"
 top_sucessful_movies <- TITLE_RATING_SUCCESS |>
     inner_join(TITLE_BASICS_CCOL, by = "tconst") |>
     arrange(desc(success)) |>
@@ -383,11 +401,13 @@ top_sucessful_movies <- TITLE_RATING_SUCCESS |>
 print(top_sucessful_movies)
 ```
 
-> top 10 successful movies using our success matrix.
+> Top 10 successful movies using our success matrix.
 
 2. Choose 3-5 movies with large numbers of IMDb votes that score poorly on your success metric and confirm that they are indeed of low quality.
 
-```{r}
+```{r warning=FALSE, message=FALSE, echo=TRUE}
+#| code-fold: true
+#| code-summary: "Show the code"
 low_successful_movies <- TITLE_RATING_SUCCESS |>
     inner_join(TITLE_BASICS_CCOL, by = "tconst" ) |>
     filter(numVotes >= 50000) |>
@@ -402,7 +422,9 @@ print(low_successful_movies)
 
 3. Choose a prestige actor or director and confirm that they have many projects with high scores on your success metric.
 
-```{r}
+```{r warning=FALSE, message=FALSE}
+#| code-fold: true
+#| code-summary: "Show the code"
 # we have chosen Zendaya
 actor_id <- NAME_BASICS_NA |>
     filter(primaryName == "Zendaya") |>
@@ -432,7 +454,9 @@ print(head(actor_success,5))
 
 4. Perform at least one other form of ‘spot check’ validation.
 
-```{r}
+```{r warning=FALSE, echo=TRUE, message=FALSE}
+#| code-fold: true
+#| code-summary: "Show the code"
 #top 3 movie bassed on success matrix
 #bottom 3 movies based on success matrix
 
@@ -454,8 +478,10 @@ print(spot_check_movies)
 
 5. Come up with a numerical threshold for a project to be a ‘success’; that is, determine a value v such that movies above v are all “solid” or better.
 
-```{r, message=FALSE, echo=FALSE}
-# Load necessary libraries
+```{r, message=FALSE, echo=FALSE, warning=FALSE}
+#| code-fold: true
+#| code-summary: "Show the code"
+
 library(dplyr)
 
 # calculate based on averageRating and numVotes
@@ -489,11 +515,14 @@ threshold <- quantile(TITLE_RATING_SUCCESS2$success, 0.50, na.rm = TRUE)
 
 ## Examining Success. by Genre and Decade
 
-## Task 4
+### Task 4
 
 1. What was the genre with the most “successes” in each decade?
 
-```{r}
+```{r warning=FALSE, message=FALSE, echo=TRUE}
+#| code-fold: true
+#| code-summary: "Show the code"
+
 # Filter for movies in title_basics and title_rating
 
 movie_ratings <- TITLE_BASICS_CCOL|>
@@ -516,16 +545,17 @@ most_successful_by_decade_genre <- decade_genre |>
   slice_max(order_by = total_success, n = 1)
 
 
-#Display the result
-
 print(most_successful_by_decade_genre)
 ```
-> From our analysis, we can say that **Comedy** was the most popular genre from the 1980s onwards. However, since 2020, **Drama** has emerged as the leading genre. It will be interesting to see which genre dominates in the next decade.
+
+>From our analysis, we can say that **Comedy** was the most popular genre from the 1980s onwards. However, since 2020, **Drama** has emerged as the leading genre. It will be interesting to see which genre dominates in the next decade.
 
 2. What genre consistently has the most “successes”? What genre used to reliably produced “successes” and has fallen out of favor?
 
 
-```{r}
+```{r message=FALSE, warning=FALSE, echo=TRUE}
+#| code-fold: true
+#| code-summary: "Show the code"
 # Step 1: Aggregate success by genre and decade
 
 success_by_genre_and_decade <- decade_movie_rating |>
@@ -574,7 +604,9 @@ print(fallen_genres)
 ```
 
 
-```{r, echo=FALSE}
+```{r, echo=FALSE,warning=FALSE, message=FALSE}
+#| code-fold: true
+#| code-summary: "Show the code"
 library(ggplot2)
 
 # Bar Plot comparing success before and after 2000 for each genre
@@ -589,11 +621,13 @@ ggplot(genre_success_trends, aes(x = reorder(genres, -decline), y = decline, fil
 
 
 ```
-> As per our analysis **Drama** is the most successful genre. While, for **Adult** genre it was sucessful before 2000 and we see a decile of 67220.62 after 2000. 
+>As per our analysis **Drama** is the most successful genre. While, for **Adult** genre it was sucessful before 2000 and we see a decile of 67220.62 after 2000. 
 
 3. What genre has produced the most “successes” since 2010? Does it have the highest success rate or does it only have a large number of successes because there are many productions in that genre?
 
-```{r}
+```{r warning=FALSE, message=FALSE, echo=TRUE}
+#| code-fold: true
+#| code-summary: "Show the code"
 # Filter data for movies released after 2010
 movies_since_2010 <- decade_movie_rating |>
     filter(decade >= 2010)
@@ -618,11 +652,13 @@ print(most_successful_genre_since_2010$success_rate)
 
 
 ```
-> Since 2010, **Drama** has been the most successful genre with high volume of content and sucess rate.
+>Since 2010, **Drama** has been the most successful genre with high volume of content and sucess rate.
 
 4. What genre has become more popular in recent years?
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+#| code-fold: true
+#| code-summary: "Show the code"
 # Decade_movie_rating_clean
  
 decade_movie_rating_clean <- decade_movie_rating |>
@@ -659,11 +695,11 @@ print(most_popular_recent_genre)
 
 ```
 
-> **The Game- Show** has shown the highest growth rate of 20.74% from 2010 to 2020
+>**The Game- Show** has shown the highest growth rate of 20.74% from 2010 to 2020
 
 ## Successful Personnel in the Genre
 
-## Task 5
+### Task 5
 
 Identify (at least) two actors and one director who you will target as the key talent for your movie. Write a short “pitch” as to why they are likely to be successful. You should support your pitch with at least one graphic and one table.
 
@@ -685,7 +721,9 @@ Visualize the Success:
 Here’s a sneak peek at how these talents are killing it on IMDb:
 
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
+```{r, echo=TRUE, message=FALSE, warning=FALSE}
+#| code-fold: true
+#| code-summary: "Show the code"
 
 library(dplyr)
 library(ggplot2)
@@ -762,9 +800,6 @@ ggplot(contribution_data, aes(x = primaryName, y = total_success, fill = genres)
        fill = "Genres") +
   theme_minimal()
 
-
-
-
 ```
 
 Now, that we have our data, Let’s dive into why Zendaya, Blake Lively, and David Fincher are the dream team for this psychological thriller!
@@ -779,9 +814,11 @@ Meet the Team:
 
 
 ## Nostalgia and Remakes
-## Task 6: Finding a Classic Movie to Remake
+### Task 6: Finding a Classic Movie to Remake
 
-```{r}
+```{r warning=FALSE, message=FALSE, echo=TRUE}
+#| code-fold: true
+#| code-summary: "Show the code"
 
 # Define X as the number of top movies you want to select
 X <- 10  # Random number chosen
@@ -820,9 +857,11 @@ print(no_remake_candidates)
 
 
 ```
-> To remake the movie that has not been made for past 25 years we choose **The Shawshank Redemption** with my key talent: Zendaya, Blake Lively, and David Fincher. 
+>To remake the movie that has not been made for past 25 years we choose **The Shawshank Redemption** with my key talent: Zendaya, Blake Lively, and David Fincher. 
 
-```{r}
+```{r warning=FALSE, message=FALSE, echo=TRUE}
+#| code-fold: true
+#| code-summary: "Show the code"
 # First, find the tconst for The Shawshank Redemption (if you already have this, skip this step)
 shawshank_tconst <- TITLE_BASICS_CCOL |>
   filter(primaryTitle == "The Shawshank Redemption") |>
@@ -858,7 +897,7 @@ if (nrow(alive_personnel) > 0) {
 
 
 ## Putting It Together
-## Task 7
+### Task 7
 
 > ## Elevator Pitch:
 >
