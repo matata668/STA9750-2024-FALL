@@ -8,7 +8,7 @@ output:
 cache: true
 ---
 
-Hi,
+Hi!
 
 In this project, I am stepping into the role of a Hollywood development executive, where my job is to create new and exciting movie ideas. My goal is to develop fresh, data-driven concepts that bring something unique to the screen. To make that happen, I’ll be using IMDb data [the IMDb non- commercial release](https://datasets.imdbws.com/) to dig deep into Hollywood’s history, exploring patterns of success and failure in the industry.
 
