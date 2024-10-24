@@ -21,6 +21,7 @@ library(tidyverse)
 library(stringr)
 library(readr)
 library(knitr)
+library(ggplot2)
 ```
 
 ## Data
@@ -668,9 +669,24 @@ Identify (at least) two actors and one director who you will target as the key t
 
 For my upcoming psychological thriller, we are excited to announce a powerhouse team that blends established talent with rising stars, led by an acclaimed director known for his mastery of tension and atmosphere. This project is anchored by **Zendaya**, **Blake Lively**, and **David Fincher**—a dynamic trio that promises both commercial appeal and critical success.
 
+Meet the Team:
+Zendaya: She’s not just a star, she’s a supernova. With an average IMDb rating of 8.2, Zendaya has taken Hollywood by storm, from Euphoria to Dune. Her ability to effortlessly switch between emotional vulnerability and fierce intensity is exactly what our lead role demands. Plus, let’s be real—audiences can’t get enough of her, and neither can we!
+
+Blake Lively: Class, charm, and a sprinkle of danger. Blake’s IMDb rating of 7.9 proves she knows how to bring depth to suspense-driven films (The Shallows, anyone?). She’s got that magnetic screen presence, where you can’t help but wonder, “What’s she going to do next?” Pair her with Zendaya, and we’ve got the ultimate power duo to keep audiences on the edge of their seats.
+
+David Fincher: If we’re making a psychological thriller, we need the king of suspense—Fincher! With an 8.5 IMDb average, this guy practically breathes tension. From the eerie brilliance of Gone Girl to the chilling mind-bend of Fight Club, Fincher is the master at making you question everything. He’ll take our story and turn it into an unforgettable, mind-twisting journey.
+
+Why This Trio Works:
+Zendaya and Blake bring the fire on screen, and Fincher knows exactly how to fan the flames. Their track record in the thriller, drama, and horror genres is undeniable. Check out the numbers in the table given.
+
+Picture this: Zendaya as the determined but haunted protagonist, Blake as her enigmatic and maybe untrustworthy friend, all under Fincher’s masterful lens. The suspense, the twists, the psychological games—this team has everything it takes to create a film that will leave the audience talking (and rewatching) for years.
+
+Visualize the Success:
+Here’s a sneak peek at how these talents are killing it on IMDb:
+
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-# Load necessary libraries
+
 library(dplyr)
 library(ggplot2)
 library(knitr)
@@ -750,100 +766,53 @@ ggplot(contribution_data, aes(x = primaryName, y = total_success, fill = genres)
 
 
 ```
-As we refrence our supporting data in the table above
 
-**Zendaya** – Rising Star with a Proven Record
-Zendaya has quickly become one of the most sought-after talents in Hollywood, transitioning seamlessly from her early work in Disney shows to more serious and dramatic roles. With standout performances in "Euphoria", "Malcolm & Marie", and her role in the "Spider-Man" franchise, Zendaya has consistently proven her versatility and her ability to captivate audiences.
+Now, that we have our data, Let’s dive into why Zendaya, Blake Lively, and David Fincher are the dream team for this psychological thriller!
 
-In our psychological thriller, Zendaya will bring her emotionally complex performances to the forefront, playing a character that oscillates between vulnerability and strength—traits she has showcased so effectively in her previous work.
+Meet the Team:
 
-IMDb Highlights:
+**Zendaya**: She’s not just a star, she’s a supernova. With an average IMDb rating of 8.2, Zendaya has taken Hollywood by storm, from Euphoria to Dune. Her ability to effortlessly switch between emotional vulnerability and fierce intensity is exactly what our lead role demands. Plus, let’s be real—audiences can’t get enough of her, and neither can we!
 
-Euphoria: 8.4/10
-Malcolm & Marie: 6.7/10
-Spider-Man (franchise): 7.5/10+
+**Blake Lively**: Class, charm, and a sprinkle of danger. Blake’s IMDb rating of 7.9 proves she knows how to bring depth to suspense-driven films (The Shallows, anyone?). She’s got that magnetic screen presence, where you can’t help but wonder, “What’s she going to do next?” Pair her with Zendaya, and we’ve got the ultimate power duo to keep audiences on the edge of their seats.
 
-Her inclusion will bring a younger audience while also adding serious dramatic weight to the project.
+**David Fincher**: If we’re making a psychological thriller, we need the king of suspense—Fincher! With an 8.5 IMDb average, this guy practically breathes tension. From the eerie brilliance of Gone Girl to the chilling mind-bend of Fight Club, Fincher is the master at making you question everything. He’ll take our story and turn it into an unforgettable, mind-twisting journey.
 
-**Blake Lively** – Established Star with a Range in Suspense and Drama
-Blake Lively brings a wealth of experience, particularly in the thriller and suspense genres. Her roles in "A Simple Favor", "The Shallows", and "The Age of Adaline" have cemented her status as a versatile actress who can seamlessly transition from light-hearted roles to intense, character-driven performances.
-
-Blake’s unique ability to maintain a sophisticated presence while exploring darker psychological themes makes her an ideal partner in this project. In our film, her character will serve as a foil to Zendaya, creating a dynamic interplay of motivations and conflict.
-
-Blake’s established stardom will attract a broad demographic, ensuring box-office viability while adding depth to the psychological layers of the character.
-
-IMDb Highlights:
-
-A Simple Favor: 6.8/10
-The Shallows: 6.3/10
-The Age of Adaline: 7.2/10
-
-**David Fincher** – Master of the Psychological Thriller
-Few directors can match the tension-building mastery of David Fincher. Known for iconic films like "Gone Girl", "Se7en", and "Fight Club", Fincher is a natural fit for this project. His expert command of atmosphere, character complexity, and his ability to unearth the darkest corners of the human psyche will elevate this film to another level.
-
-With a director of his caliber, we expect to create a suspenseful, atmospheric thriller that will keep audiences at the edge of their seats. His signature style—dark, meticulous, and unrelentingly tense—fits perfectly with the narrative we envision.
-
-IMDb Highlights:
-
-Gone Girl: 8.1/10
-Se7en: 8.6/10
-Fight Club: 8.8/10
-
-Fincher’s reputation alone will draw attention from both thriller enthusiasts and a more mature, critically-minded audience, ensuring a film that is not only commercially successful but also a critical darling.
-
-#### **Supporting Visuals:**
-
-##### Average IMDb Ratings for Key Personnel
-This graph clearly shows the average IMDb ratings of Zendaya, Blake Lively, and David Fincher, highlighting their consistent success across their careers. David Fincher leads with the highest average rating, while Zendaya follows closely, ensuring that our key personnel have a strong track record of critical and audience success.
-
-
-##### Contribution of Genres to IMDb Ratings for Key Personnel
-This stacked bar chart reveals the breadth of experience that each person brings across various genres. Notably, David Fincher’s dominance in the Thriller genre, combined with Blake Lively’s and Zendaya’s strong footholds in Drama and Thriller, makes this team ideal for a psychological thriller.
-
-#### **Why This Team Will Succeed ??**
-
-By combining Zendaya’s rising star power, Blake Lively’s established versatility, and David Fincher’s genre-defining mastery of psychological thrillers, this film will strike the perfect balance between commercial appeal and critical acclaim. Each brings unique strengths to the table:
-
-Zendaya will captivate a younger, diverse audience with her emotionally intense performances.
-Blake Lively will attract established thriller and drama audiences with her sophisticated and suspenseful roles.
-David Fincher will anchor the film with his expert direction, ensuring a tightly wound, tension-filled narrative that delivers on all fronts.
-This trio represents a blend of established talent, genre expertise, and cross-generational appeal. Together, they will ensure that our psychological thriller stands out in a crowded market, offering both thrilling entertainment and profound emotional depth.
 
 ## Nostalgia and Remakes
-##Task 6: Finding a Classic Movie to Remake
+## Task 6: Finding a Classic Movie to Remake
 
 ```{r}
 
-# Define X as the number of top movies you want to select (e.g., top 10 movies)
-X <- 10  # Replace 10 with any number you prefer
+# Define X as the number of top movies you want to select
+X <- 10  # Random number chosen
 
 # Filter classic movies (before 1995) with high IMDb rating and number of votes
-classic_movies <- TITLE_BASICS_CCOL %>%
-  filter(titleType == "movie" & startYear < 1995) %>%
-  inner_join(TITLE_RATING_SUCCESS, by = "tconst") %>%
-  filter(numVotes > 10000, averageRating >= 7.5) %>%
-  arrange(desc(averageRating)) %>%
-  head(X)  # Select the top X movies based on the highest IMDb rating
+classic_movies <- TITLE_BASICS_CCOL |>
+  filter(titleType == "movie" & startYear < 1995) |>
+  inner_join(TITLE_RATING_SUCCESS, by = "tconst") |>
+  filter(numVotes > 10000, averageRating >= 7.5) |>
+  arrange(desc(averageRating)) |>
+  head(X) 
 
 # Select necessary columns for review
-classic_movies_selected <- classic_movies %>%
+classic_movies_selected <- classic_movies |>
   select(tconst, primaryTitle, startYear, averageRating, numVotes)
 
 # Display the top X classic movies
 print(classic_movies_selected)
 # Filter for movies released after 1995 (potential remakes)
-recent_movies <- TITLE_BASICS_CCOL %>%
-  filter(titleType == "movie" & startYear >= 1995) %>%
+recent_movies <- TITLE_BASICS_CCOL |>
+  filter(titleType == "movie" & startYear >= 1995) |>
   select(tconst, primaryTitle, startYear)
 
 # Find remakes by comparing titles with the same name
-remakes <- classic_movies_selected %>%
+remakes <- classic_movies_selected |>
   inner_join(recent_movies, by = "primaryTitle")
 print(remakes)
 # This will find movies with the same title
 
 # Exclude remakes to get the movies that haven't been remade
-no_remake_candidates <- classic_movies_selected %>%
+no_remake_candidates <- classic_movies_selected |>
   anti_join(remakes, by = "primaryTitle")
 
 # Display the list of movies that have not been remade
@@ -875,8 +844,8 @@ if (nrow(alive_personnel) > 0) {
   print("The following key personnel are still alive:")
   print(alive_personnel)
   
-  # Optionally, save the data for further action (e.g., contact legal department)
-  write.csv(alive_personnel, "shawshank_alive_personnel.csv", row.names = FALSE)
+  #unstatement if want to opload a csv file
+  #write.csv(alive_personnel, "shawshank_alive_personnel.csv", row.names = FALSE)
   
   # Example message to the legal department
   message_to_legal <- paste("Key personnel from The Shawshank Redemption are still alive. Please review the attached CSV for potential legal actions regarding securing rights for a remake.")
@@ -888,13 +857,28 @@ if (nrow(alive_personnel) > 0) {
 ```
 
 
-
 ## Putting It Together
 ## Task 7
 
-```{r}
+> ## Elevator Pitch:
+>
+> Imagine... a psychological thriller that combines the electrifying talents of Zendaya, Blake Lively, and the directorial genius of David Fincher. With Zendaya’s star power and proven box office draw (IMDb rating: 8.2) paired with Blake Lively’s knack for high-tension drama (IMDb rating: 7.9), we have a duo that will keep audiences glued to their seats. Under the masterful guidance of David Fincher (IMDb rating: 8.5), a director who has made thrillers like Gone Girl and Fight Club modern classics, this film will deliver an intense, mind-bending story that guarantees repeat viewership.
+>
+>In a genre where suspense and psychological depth reign supreme, Fincher’s precision storytelling will be elevated by Zendaya and Blake’s dynamic performances. We’ve seen the market for psychological thrillers explode in recent years, and with this all-star team, our film is poised to become the next big hit.
+>
+> **Teaser Trailer Formula**:
+From director David Fincher, the visionary mind behind Gone Girl and Fight Club,
+And from Zendaya, the beloved star of Euphoria and Dune,
+And from Blake Lively, Hollywood icon of high-stakes drama in The Shallows,
+Comes the timeless tale: Mind Games
+A story of trust, betrayal, and survival,
+Coming soon to a theater near you.
+>
+> With this winning combination of talent and a gripping story, our psychological thriller is set to captivate audiences and dominate the box office.
+>
+>
+> - Aachal Ghimire
 
-```
 
 
 
