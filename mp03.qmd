@@ -21,7 +21,7 @@ library(gganimate)
 
 We have downloaded Congressional Shapefiles 1976-2012 fully automated using the code shown below.
 
-#### Data I: US House Election Votes from 1976 to 2022
+**Data I**: US House Election Votes from 1976 to 2022
 
 ```{r warning=FALSE, message=FALSE}
 
@@ -35,8 +35,9 @@ kable(head(house_data), caption = "Preview of house_data (First 6 Rows)")
 
 ```
 
-#### Data II
-```{r message=FALSE, warning=FALSE, include=FALSE, echo=TRUE, results='hide'}
+ **Data II**
+```{r, message=FALSE, warning=FALSE, echo=TRUE}
+
 project_code <- 'mp03'
 data_dir <- file.path(getwd(), "data", project_code)
 
@@ -54,8 +55,9 @@ get_congress_map <- function(cong) {
   
   if (!file.exists(shp_file_local)){
     if (!dir.exists(data_dir_cong)){
-      
+     dir.create(data_dir_cong, showWarnings = FALSE, recursive = TRUE) 
     }
+    
   
     zp <- sprintf("http://cdmaps.polisci.ucla.edu/shp/districts%03i.zip", cong)
     tmp_dir <- tempdir()
@@ -67,7 +69,7 @@ get_congress_map <- function(cong) {
   }
   
   # Suppress sf read messages and warnings
-  suppressMessages(suppressWarnings(st_read(shp_file_local)))
+  return(suppressMessages(suppressWarnings(st_read(shp_file_local, quiet = TRUE))))
 }
  
 congress_maps <- list()
@@ -78,7 +80,7 @@ for (cong in 94:114) {
 }
 ```
 
-#### Data_III:Congressional Boundary Files 2014 to Present
+**Data_III**:Congressional Boundary Files 2014 to Present
 
 ```{r warning=FALSE, message=FALSE, include=FALSE, echo=TRUE, results='hide'}
 # Task 2 
@@ -131,11 +133,14 @@ tl_2014_us_cd114 <- congress_maps_2014_2022[["tl_2014_us_cd114"]]
   
 ```
 
-### Task3
+#### Task 3
 
-3.1. Which states have gained and lost the most seats in the US House of Representatives between 1976 and 2022?
+  1. Which states have gained and lost the most seats in the US House of Representatives between 1976 and 2022?
 
 ```{r}
+#| code-fold: true
+#| code-summary: "Show the code"
+
 # Load necessary libraries
 library(dplyr)
 library(ggplot2)
@@ -200,10 +205,11 @@ ggplot(top_losses, aes(x = reorder(state, total_seat_change), y = total_seat_cha
 Between 1976 and 2022, U.S. House seat gains were predominantly in southern and western states like Texas and Florida, reflecting demographic and economic shifts toward these regions. Population growth driven by job opportunities, economic development, and migration contributed to these states' increased representation in Congress. Conversely, states in the Northeast and Midwest, such as New York and Pennsylvania, faced seat losses as residents moved elsewhere for better prospects. This redistribution underscores a broader trend of shifting political power, as states with growing populations gain influence in national politics, while those with declines see diminished representation. These changes reveal how economic and demographic factors continually reshape the political landscape.
 
 
-Task 3.2
+  2. 
+    In this analysis, our coding steps aim to examine the impact of New York's fusion voting system on election outcomes. We'll begin by filtering the data to focus specifically on New York State US House elections, where fusion voting is applied. Next, we define “Democrat” and “Republican” as the major parties for our analysis and standardize party names to ensure consistency. Then, we calculate each candidate's total votes across all ballot lines to capture their fusion vote count. We also compute the votes from major party lines only, simulating a non-fusion system. Following that, we identify the winning candidate in each system to compare outcomes. By joining the fusion and non-fusion results, we can pinpoint races where the fusion system led to a different result. Finally, we'll filter for cases with differing outcomes, allowing us to highlight races where fusion voting likely influenced the election result.
 
 ```{r warning=FALSE, message=FALSE}
- #| code-fold: true
+#| code-fold: true
 #| code-summary: "Show the code"
 
 # Step 1: Filter for New York State and US House elections
@@ -269,7 +275,10 @@ The table shows several instances between 1976 and 2006 where New York's unique 
 This data highlights how fusion voting can substantially impact election results, allowing candidates to leverage additional support from minor parties to secure a win that would not be possible through major party votes alone. Fusion voting provides minor parties like the Working Families Party or the Conservative Party with meaningful influence, as their endorsements can be pivotal in close races. Overall, the table underscores that the fusion system can shift the balance in New York elections, often favoring candidates who can appeal across party lines, and suggests that outcomes in these races may align differently with voter preferences in a standard, non-fusion voting system.
 
 
-Task 3.3
+
+
+3.
+  In this analysis, we explore the voting trends between presidential and congressional candidates from the same party to determine if presidential candidates tend to receive more support within individual states. By comparing the average vote differences, we aim to see if voters generally prefer presidential candidates over their congressional counterparts, and whether these trends vary over time, across different states, or between political parties. Our visualizations provide insights into these patterns, highlighting notable years and states where presidential candidates either ran ahead of or behind their co-partisans. This analysis helps uncover broader trends in voter alignment within parties, potentially revealing unique cases where presidential candidates stand out in popularity compared to their congressional peers.
 
 ```{r warning=FALSE, message=FALSE}
 #| code-fold: true
@@ -355,9 +364,9 @@ The analysis shows that presidential candidates generally tend to receive more v
 
 State-level differences are evident, with states like Florida and New York showing larger vote disparities, reflecting unique political dynamics that lead voters to favor either national or local candidates more strongly. Third-party candidates generally show smaller, stable differences, indicating limited impact on overall vote trends. Additionally, certain election years highlight outlier presidential candidates who were notably more or less popular than their party’s congressional candidates. Overall, while presidential candidates often attract broader support, the level of this effect varies widely, reflecting voter tendencies to differentiate between national and local elections based on the election year, candidate appeal, and specific state issues.
 
-### Importing and Plotting Shape File Data
+#### Importing and Plotting Shape File Data
 
-```{r echo=TRUE, message=FALSE, warning=FALSE}
+```{r  message=FALSE,warning=FALSE, include=FALSE}
 #| code-fold: true
 #| code-summary: "Show the code"
 
@@ -378,10 +387,8 @@ nyc_sf
 kable(nyc_sf, caption = "NYC Borough Boundaries")
 
 ```
+#### Task 4 Automate Zip File Extraction
 
-### Task 4
-
-The implementation was handled in Task 1, below is the explicit function to unzip and read the .shp file from a given path.
 ```{r message=FALSE, warning=FALSE}
 #| code-fold: true
 #| code-summary: "Show the code"
@@ -411,9 +418,11 @@ ggplot(nyc_sf,
 
 ```
 
-### Task 5
+#### Task 5
 
 Using the data you downloaded earlier, create a chloropleth visualization of the electoral college results for the 2000 presidential election (Bush vs. Gore)
+
+In this task, we created a chloropleth map to visualize the electoral college results for the 2000 presidential election between George W. Bush and Al Gore. Using the data we previously downloaded, we mapped each state according to the winning party, with Republican states shaded in red and Democratic states in blue. The map also displays the electoral votes for each state, offering a clear visual representation of how the electoral college votes were distributed across the country. By employing geographic data and election results, this visualization highlights the regional voting patterns and provides insight into the overall electoral landscape of the 2000 election.
 
 ```{r warning=FALSE, message=FALSE}
 #| code-fold: true
@@ -508,7 +517,7 @@ northeast_states <- c("ME", "NH", "VT", "MA", "RI", "CT", "NJ")
 election_map <- election_map +
   geom_text(data = continental_states %>% filter(!state_po %in% northeast_states),
             aes(label = electoralvotes, geometry = geometry), 
-            stat = "sf_coordinates", size = 3, color = "black")
+            stat = "sf_coordinates", size = 3, color = "white")
 
 # Add labels for small Northeast states as external annotations with arrows
 election_map <- election_map +
@@ -540,88 +549,56 @@ ggsave("election_map_with_insets.png", plot = election_map, width = 20, height =
 
 ```
 
-### Task 6
-```{r}
+#### Task 6: Faceted version showing election results over time.
+
+```{r warning=FALSE, message=FALSE}
+
 #| code-fold: true
 #| code-summary: "Show the code"
-# Load required libraries
-# library(dplyr)
-# library(ggplot2)
-# library(sf)
-# library(purrr)
-# 
-# # File path to the election data
-# file_path <- "/Users/aachalghimire/Documents/GitHub/STA9750-2024-FALL/data/mp03/1976-2020-president.csv"
-# election_data <- read.csv(file_path, stringsAsFactors = FALSE)
-# 
-# # Define the range of election years
-# election_years <- seq(1976, 2020, by = 4)
-# 
-# # Prepare electoral votes data (assuming `electoral_votes_2000` is already loaded)
-# # Ensure it has the columns `state_po` and `electoralvotes`
-# 
-# # Filter and process data for each election year
-# election_data <- election_data %>%
-#   filter(year %in% election_years) %>%
-#   group_by(year, state) %>%
-#   filter(!writein) %>%
-#   slice_max(candidatevotes, n = 1) %>%
-#   ungroup() %>%
-#   left_join(electoral_votes_2000, by = "state_po")  # Add electoral votes
-# 
-# # Convert state names to lowercase for merging with shapefile data
-# election_data$state <- tolower(election_data$state)
-# 
-# # Load and prepare the shapefile data
-# shape_data_2000 <- congress_maps[["cd106"]]
-# shape_data_2000$STATENAME <- tolower(shape_data_2000$STATENAME)
-# 
-# # Ensure all geometries are valid
-# shape_data_2000 <- st_make_valid(shape_data_2000)
-# 
-# # Merge the election data with shapefile data for each year
-# state_boundaries <- map_df(election_years, function(yr) {
-#   # Filter election data for the specific year
-#   data_year <- election_data %>% filter(year == yr)
-#   
-#   # Merge with shapefile data
-#   merged_data <- shape_data_2000 %>%
-#     left_join(data_year, by = c("STATENAME" = "state"))
-#   
-#   # Aggregate geometries by state and keep the year
-#   merged_data %>%
-#     group_by(STATENAME, year = yr) %>%
-#     summarise(geometry = st_union(geometry), .groups = "drop") %>%
-#     left_join(data_year, by = c("STATENAME" = "state", "year" = "year"))
-# })
-# 
-# # Calculate centroids for placing text labels
-# state_boundaries <- state_boundaries %>%
-#   mutate(centroid = st_centroid(geometry)) %>%
-#   filter(!is.na(electoralvotes))  # Remove any states with missing electoral votes
-# 
-# # Create the faceted map with electoral vote annotations
-# faceted_map <- ggplot() +
-#   geom_sf(data = state_boundaries, aes(fill = party_simplified, geometry = geometry), color = "white", size = 0.3) +
-#   geom_sf_text(data = state_boundaries, aes(geometry = centroid, label = electoralvotes), size = 3, color = "black") +  # Use centroids for labels
-#   facet_wrap(~ year, ncol = 3) +  # Arrange facets with 3 columns
-#   scale_fill_manual(values = c("DEMOCRAT" = "blue", "REPUBLICAN" = "red")) +
-#   labs(title = "Presidential Election: Winning Party by State", fill = "Winning Party") +
-#   theme_minimal() +
-#   theme(
-#     axis.text = element_blank(),
-#     axis.ticks = element_blank(),
-#     axis.title = element_blank(),
-#     panel.grid = element_blank(),
-#     strip.text = element_text(size = 10),
-#     plot.title = element_text(size = 16, hjust = 0.5, face = "bold")
-#   )
-# 
-# # Display and save the faceted map as an image
-# print(faceted_map)
-# ggsave("election_faceted_election_map_with_votes.png", plot = faceted_map, width = 25, height = 20)
+
+# Prepare the election data by selecting the winner for each state and each year
+winners_data <- election_data |>
+  filter(!writein) |>  # Exclude write-in candidates
+  group_by(year, state) |>
+  slice_max(candidatevotes, n = 1) |>  # Select the candidate with max votes per year, per state
+  select(year, state, state_po, candidate, party_simplified, candidatevotes, totalvotes)
+
+# Convert state names to lowercase for merging with shapefile data
+winners_data$state <- tolower(winners_data$state)
+
+# Define the list of Northeast states for later labeling
+northeast_states <- c("ME", "NH", "VT", "MA", "RI", "CT", "NY", "NJ", "PA")
+
+# Prepare the base shapefile data for each Congress session in congress_maps (example uses 106th Congress)
+# You could loop or modify this to adapt for multiple years if shapefiles are available per year
+shape_data <- congress_maps[["cd106"]] # Replace with correct object
+shape_data$STATENAME <- tolower(shape_data$STATENAME)
 
 
+# Merge shapefile data with the election results for each year
+merged_data <- shape_data |>
+  left_join(winners_data, by = c("STATENAME" = "state"))
+# Generate the faceted map plot with 3 columns
+election_map_faceted <- ggplot(data = merged_data) +
+  geom_sf(aes(fill = party_simplified), color = "white") +
+  scale_fill_manual(values = c("DEMOCRAT" = "blue", "REPUBLICAN" = "red")) +
+  labs(title = "Presidential Election Results by State Over Time",
+       fill = "Winning Party") +
+  theme_minimal() +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.title = element_blank(),
+        panel.grid = element_blank()) +
+  coord_sf(xlim = c(-130, -60), ylim = c(24, 50), expand = FALSE) +
+  geom_sf_text(data = subset(merged_data, state_po %in% northeast_states),
+               aes(label = state_po), size = 3, nudge_y = 0.5) +
+  facet_wrap(~ year, ncol = 3)  # Set 3 columns for faceting
+
+# Print the faceted plot
+print(election_map_faceted)
+
+# Save the faceted plot as an image
+ggsave("election_map_faceted_3col.png", plot = election_map_faceted, width = 15, height = 15)
 ```
 
 ### Task 7
