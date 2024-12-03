@@ -1,0 +1,601 @@
+---
+title: "mp04"
+author: "Aachal"
+editor: visual
+---
+
+We are exploring the financial decision-makig process for new faculty at CUNY, who must choose between two retirement plans: the Teacher's Retirement System (TRS) and the Optional Retirement plan (ORP). This decision is critical and irrreversable. thus, a critical evaluation essentail. 
+
+Using data- driven methodologies, this report aims to provide insight into the factors influencing the optimal choice for different individuals and scenarios. 
+
+The analysis relies on the historical data and resampling to simulate potential outcomes for each retirement plan. Key components of the report includes:
+
+ - Acquiring financial data through a password-protected API.
+ - Employing bootstrap resampling to estimate probability distributions for outcomes.
+ - Investigating the impact of variables such as market returns, inflation, starting salary, and retirement age on          decision-making.
+ - Exploring how individual demographic and actuarial assumptions, as well as risk tolerance, influence the optimal         retirement strategy.
+
+### Task 1.
+
+We have registered for AlphaVantage API key, securely stored it, and configured my R environment to interact with the API. By leveraging the AlphaVantage API, I aim to retrieve data such as time series stock information, exchange rates, and other financial metrics to support my project's objectives, ensuring best practices for security and data handling throughout the process. 
+
+```{r warning=FALSE, message=FALSE}
+# Load the API key from the text file
+api_key <- readLines("/Users/aachalghimire/GitHub/STA9750-2024-FALL/API_key")
+
+library(httr)
+
+# Example API call
+response <- GET(
+  "https://www.alphavantage.co/query",
+  query = list(
+    'function' = "TIME_SERIES_DAILY",
+    symbol = "IBM",
+    apikey = api_key
+  )
+)
+data <- content(response, as = "parsed")
+print(data)
+
+```
+
+### Task 2
+
+Similar to Task 1, we have now registered for the FRED API key, securely stored it, and configured my R environment to interact with the API.
+
+we have fetched observations for a chosen data series (e.g., GDP) and organized it into a structured data frame. We are focusing on extracting accurate date-wise values, ensuring the value column is numeric for analysis, and validating the data's time range through realtime_start and realtime_end. 
+
+```{r}
+# Load necessary libraries
+library(httr)
+library(jsonlite)
+
+# Define the path to your API key file
+api_key_path <- "/Users/aachalghimire/GitHub/STA9750-2024-FALL/FRED_apikey"
+
+# Read the API key securely
+fred_api_key <- readLines(api_key_path)
+
+# Function to fetch data from FRED
+fetch_fred_data <- function(series_id, start_date = NULL, end_date = NULL) {
+  # Define the base URL for FRED API
+  base_url <- "https://api.stlouisfed.org/fred/series/observations"
+  
+  # Construct query parameters
+  query_params <- list(
+    series_id = series_id,
+    api_key = fred_api_key,
+    file_type = "json",
+    observation_start = start_date,
+    observation_end = end_date
+  )
+  
+  # Make the API request
+  response <- GET(base_url, query = query_params)
+  
+  # Check for errors
+  if (http_status(response)$category != "Success") {
+    stop("Error fetching data: ", http_status(response)$message)
+  }
+  
+  # Parse the JSON response
+  data <- fromJSON(content(response, as = "text"), flatten = TRUE)
+  
+  # Extract the observations
+  observations <- data$observations
+  
+  # Convert the observations to a data frame
+  df <- as.data.frame(observations)
+  
+  # Ensure the value column is numeric
+  df$value <- as.numeric(df$value)
+  
+  return(df)
+}
+
+# Example usage: Fetching GDP data from 2000 to 2024
+fred_data <- fetch_fred_data(
+  series_id = "GDP", 
+  start_date = "2000-01-01", 
+  end_date = "2024-12-31"
+)
+
+# Print the first few rows of the data
+head(fred_data)
+
+# Save the data to a CSV file
+write.csv(fred_data, "fred_gdp_data.csv", row.names = FALSE)
+
+
+```
+### Task 3: Data Acquisition
+```{r}
+library(tidyverse)
+library(httr2)
+
+api_key_path <- "/Users/aachalghimire/GitHub/STA9750-2024-FALL/FRED_apikey"
+
+# Read the API key securely
+fred_key <- readLines(api_key_path)
+
+alphavantage_key <- readLines("/Users/aachalghimire/GitHub/STA9750-2024-FALL/API_key")
+# Function to fetch data from FRED
+fetch_fred <- function(series_id, key) {
+  # Send request to FRED
+  response <- request("https://api.stlouisfed.org/fred/series/observations") %>%
+    req_url_query(
+      series_id = series_id,
+      api_key = key,
+      file_type = "json"
+    ) %>%
+    req_perform()
+  
+  # Parse and process the response
+  data <- response %>%
+    resp_body_json(simplifyVector = TRUE) %>%
+    .$observations %>%
+    as.data.frame()
+
+  data$date <- as.Date(data$date)
+  data$value <- as.numeric(data$value)
+  return(data %>% rename(month = date))
+}
+
+fetch_alpha_vantage <- function(symbol, key) {
+  # Send request to Alpha Vantage
+  response <- request("https://www.alphavantage.co/query") %>%
+    req_url_query(
+      `function` = "TIME_SERIES_DAILY",
+      symbol = symbol,
+      apikey = key,
+      outputsize = "full"
+    ) %>%
+    req_perform()
+  
+  # Parse the response
+  data <- response %>%
+    resp_body_json(simplifyVector = TRUE)
+
+  # Check if 'Time Series (Daily)' exists in the response
+  if (!"Time Series (Daily)" %in% names(data)) {
+    stop("Error: The API response does not contain 'Time Series (Daily)' data. Check your API key, symbol, or request limits.")
+  }
+
+  # Extract raw time series and dates
+  time_series <- data$`Time Series (Daily)`
+  raw_dates <- names(time_series)
+  
+  # Ensure dates are valid
+  valid_dates <- raw_dates[nchar(raw_dates) == 10 & grepl("\\d{4}-\\d{2}-\\d{2}", raw_dates)]
+  parsed_dates <- as.Date(valid_dates, format = "%Y-%m-%d")
+  
+  # Subset time series to only valid dates
+  time_series <- time_series[valid_dates]
+  
+  # Transform the time series into a data frame
+  time_series_df <- do.call(rbind, lapply(time_series, as.data.frame))
+  colnames(time_series_df) <- c("open", "high", "low", "close", "volume")
+  
+  # Add the dates to the data frame
+  time_series_df$date <- parsed_dates
+  
+  # Convert relevant columns to numeric
+  time_series_df$close <- as.numeric(as.character(time_series_df$close))
+  
+  # Order by date
+  time_series_df <- time_series_df[order(time_series_df$date), ]
+
+  # Convert to monthly returns
+  monthly_data <- time_series_df %>%
+    mutate(month = floor_date(date, "month")) %>%
+    group_by(month) %>%
+    summarise(monthly_return = last(close) / first(close) - 1)
+  
+  return(monthly_data)
+}
+
+# Download datasets
+# 1. Wage Growth (FRED)
+data_wage <- fetch_fred("CES0500000003", fred_key) # Average Hourly Earnings
+
+# 2. Inflation (FRED)
+data_inflation <- fetch_fred("CPIAUCSL", fred_key) # Consumer Price Index
+
+# 3. US Equity Market Returns (Alpha Vantage)
+data_us_equity <- fetch_alpha_vantage("SPY", alphavantage_key) # S&P 500 ETF
+
+# 4. International Equity Market Returns (AlphaVantage)
+data_int_equity <- fetch_alpha_vantage("EFA", alphavantage_key) # iShares MSCI EAFE ETF
+
+# 5. Bond Market Returns (FRED)
+data_bond <- fetch_fred("BAMLHYH0A0HYM2TRIV", fred_key) # High-Yield Corporate Bond Index
+
+# 6. Short-Term Debt Returns (FRED)
+data_debt <- fetch_fred("TB3MS", fred_key) # 3-Month Treasury Bill Rate
+
+# Combine all datasets
+combined_data <- data_wage %>%
+  rename(wage_growth = value) %>%
+  full_join(data_inflation %>% rename(inflation = value), by = "month") %>%
+  full_join(data_us_equity %>% rename(us_equity_return = monthly_return), by = "month") %>%
+  full_join(data_int_equity %>% rename(intl_equity_return = monthly_return), by = "month") %>%
+  full_join(data_bond %>% rename(bond_return = value), by = "month") %>%
+  full_join(data_debt %>% rename(debt_return = value), by = "month")
+
+# Handle missing values (optional)
+combined_data <- combined_data %>%
+  mutate(across(everything(), ~ ifelse(is.na(.), lag(.), .)))
+
+# Save combined dataset
+write.csv(combined_data, "/Users/aachalghimire/GitHub/STA9750-2024-FALL/combined_data.csv", row.names = FALSE)
+
+# Print a preview of the combined data
+print(head(combined_data))
+```
+# task 3 for last 20 years
+```{r}
+library(tidyverse)
+library(httr2)
+
+api_key_path <- "/Users/aachalghimire/GitHub/STA9750-2024-FALL/FRED_apikey"
+
+# Read the API key securely
+fred_key <- readLines(api_key_path)
+alphavantage_key <- readLines("/Users/aachalghimire/GitHub/STA9750-2024-FALL/API_key")
+
+# Define the start date (20 years ago from today)
+start_date <- Sys.Date() - years(20)
+
+# Function to fetch data from FRED
+fetch_fred <- function(series_id, key) {
+  # Send request to FRED
+  response <- request("https://api.stlouisfed.org/fred/series/observations") %>%
+    req_url_query(
+      series_id = series_id,
+      api_key = key,
+      file_type = "json"
+    ) %>%
+    req_perform()
+  
+  # Parse and process the response
+  data <- response %>%
+    resp_body_json(simplifyVector = TRUE) %>%
+    .$observations %>%
+    as.data.frame()
+
+  data$date <- as.Date(data$date)
+  data$value <- as.numeric(data$value)
+  
+  # Filter data for the last 20 years
+  return(data %>% filter(date >= start_date) %>% rename(month = date))
+}
+
+fetch_alpha_vantage <- function(symbol, key) {
+  # Send request to Alpha Vantage
+  response <- request("https://www.alphavantage.co/query") %>%
+    req_url_query(
+      `function` = "TIME_SERIES_DAILY",
+      symbol = symbol,
+      apikey = key,
+      outputsize = "full"
+    ) %>%
+    req_perform()
+  
+  # Parse the response
+  data <- response %>%
+    resp_body_json(simplifyVector = TRUE)
+
+  if (!"Time Series (Daily)" %in% names(data)) {
+    stop("Error: The API response does not contain 'Time Series (Daily)' data. Check your API key, symbol, or request limits.")
+  }
+
+  time_series <- data$`Time Series (Daily)`
+  raw_dates <- names(time_series)
+  valid_dates <- raw_dates[nchar(raw_dates) == 10 & grepl("\\d{4}-\\d{2}-\\d{2}", raw_dates)]
+  parsed_dates <- as.Date(valid_dates, format = "%Y-%m-%d")
+  
+  # Subset to valid dates
+  time_series <- time_series[valid_dates]
+  
+  time_series_df <- do.call(rbind, lapply(time_series, as.data.frame))
+  colnames(time_series_df) <- c("open", "high", "low", "close", "volume")
+  time_series_df$date <- parsed_dates
+  time_series_df$close <- as.numeric(as.character(time_series_df$close))
+  time_series_df <- time_series_df[order(time_series_df$date), ]
+  
+  # Filter to the last 20 years and calculate monthly returns
+  time_series_df <- time_series_df %>%
+    filter(date >= start_date) %>%
+    mutate(month = floor_date(date, "month")) %>%
+    group_by(month) %>%
+    summarise(monthly_return = last(close) / first(close) - 1)
+  
+  return(time_series_df)
+}
+
+# Download datasets
+data_wage <- fetch_fred("CES0500000003", fred_key) # Average Hourly Earnings
+data_inflation <- fetch_fred("CPIAUCSL", fred_key) # Consumer Price Index
+data_us_equity <- fetch_alpha_vantage("SPY", alphavantage_key) # S&P 500 ETF
+data_int_equity <- fetch_alpha_vantage("EFA", alphavantage_key) # iShares MSCI EAFE ETF
+data_bond <- fetch_fred("BAMLHYH0A0HYM2TRIV", fred_key) # High-Yield Corporate Bond Index
+data_debt <- fetch_fred("TB3MS", fred_key) # 3-Month Treasury Bill Rate
+
+# Combine all datasets
+combined_data <- data_wage %>%
+  rename(wage_growth = value) %>%
+  full_join(data_inflation %>% rename(inflation = value), by = "month") %>%
+  full_join(data_us_equity %>% rename(us_equity_return = monthly_return), by = "month") %>%
+  full_join(data_int_equity %>% rename(intl_equity_return = monthly_return), by = "month") %>%
+  full_join(data_bond %>% rename(bond_return = value), by = "month") %>%
+  full_join(data_debt %>% rename(debt_return = value), by = "month")
+
+# Handle missing values
+combined_data <- combined_data %>%
+  mutate(across(everything(), ~ ifelse(is.na(.), lag(.), .)))
+
+# Save combined dataset
+write.csv(combined_data, "/Users/aachalghimire/GitHub/STA9750-2024-FALL/combined_data.csv", row.names = FALSE)
+
+# Print preview of combined data
+print(head(combined_data))
+```
+Task 4: Investigation and Visualization of Input Data
+
+```{r}
+
+#| Code-fold: true
+#| Code-summary: "Show the code"
+
+# Load necessary libraries
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+
+# Ensure `month` is a Date object
+combined_data <- combined_data %>%
+  mutate(month = as.Date(month))
+
+# Compute long-run monthly averages
+long_run_averages <- combined_data %>%
+  summarise(
+    avg_wage_growth = mean(wage_growth, na.rm = TRUE),
+    avg_inflation = mean(inflation, na.rm = TRUE),
+    avg_us_equity_return = mean(us_equity_return, na.rm = TRUE),
+    avg_intl_equity_return = mean(intl_equity_return, na.rm = TRUE),
+    avg_bond_return = mean(bond_return, na.rm = TRUE),
+    avg_debt_return = mean(debt_return, na.rm = TRUE)
+  )
+
+# Print the long-run averages as a table
+print("Long-Run Monthly Averages:")
+print(long_run_averages)
+
+# Save the long-run averages table as a CSV
+write.csv(long_run_averages, "/Users/aachalghimire/GitHub/STA9750-2024-FALL/long_run_averages.csv", row.names = FALSE)
+
+# Compute the correlation matrix
+correlation_matrix <- combined_data %>%
+  select(where(is.numeric)) %>%
+  cor(use = "complete.obs")
+
+# Convert correlation matrix to a data frame
+correlation_df <- as.data.frame(correlation_matrix) %>%
+  rownames_to_column(var = "Variable1") %>%
+  pivot_longer(-Variable1, names_to = "Variable2", values_to = "value")
+
+# Print the correlation data frame
+print("Correlation Data Frame:")
+print(head(correlation_df))
+
+# Save the correlation data frame as a CSV
+write.csv(correlation_df, "/Users/aachalghimire/GitHub/STA9750-2024-FALL/correlation_matrix_long.csv", row.names = FALSE)
+
+# Create a heat map for the correlation matrix
+heatmap_plot <- ggplot(correlation_df, aes(x = Variable1, y = Variable2, fill = value)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0, limit = c(-1, 1), space = "Lab", name = "Correlation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Correlation Heat Map", x = "Variable", y = "Variable")
+
+# Save the heatmap
+ggsave(
+  "/Users/aachalghimire/GitHub/STA9750-2024-FALL/correlation_heatmap.png",
+  plot = heatmap_plot,
+  width = 8, height = 6
+)
+
+# Display the heatmap
+print(heatmap_plot)
+
+# Compute summary statistics (mean, variance, SD) for all numeric variables
+summary_table <- combined_data %>%
+  select(where(is.numeric)) %>%  # Select only numeric columns
+  summarise(
+    across(
+      everything(),
+      list(
+        mean = ~mean(.x, na.rm = TRUE),
+        variance = ~var(.x, na.rm = TRUE),
+        sd = ~sd(.x, na.rm = TRUE)
+      ),
+      .names = "{.col}_{.fn}"  # Name the new columns as "variable_stat"
+    )
+  ) %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = c("Variable", "Statistic"),
+    names_pattern = "^(.*)_(.*)$",  # Properly split variable and statistic names
+    values_to = "Value"
+  ) %>%
+  pivot_wider(
+    names_from = "Statistic",
+    values_from = "Value",
+    values_fn = mean  # Resolve any duplicate entries
+  )
+
+# Ensure all columns are numeric and not lists
+summary_table <- summary_table %>%
+  mutate(across(where(is.list), ~unlist(.)))  # Convert list columns to atomic vectors
+
+# Print the summary table (Mean, Variance, SD)
+print("Corrected Summary Table (Mean, Variance, SD):")
+print(summary_table)
+
+# Save the summary table as a CSV file
+write.csv(summary_table, "/Users/aachalghimire/GitHub/STA9750-2024-FALL/summary_table.csv", row.names = FALSE)
+
+```
+
+### Task 5: Historical Comparison of TRS and ORP
+
+```{r}
+#| Code-fold: true
+#| Code-summary: "Show the code"
+
+
+
+library(dplyr)
+library(lubridate)
+library(tidyr)
+library(zoo)
+
+# Define joining and retirement dates
+joined_date <- combined_data %>% slice_tail(n = 1) %>% pull(month) - years(20)
+retired_date <- combined_data %>% slice_tail(n = 1) %>% pull(month)
+
+# Filter data for the 20-year period
+filtered_data <- combined_data %>%
+  filter(month >= joined_date & month <= retired_date) %>%
+  arrange(month)
+
+# Initial parameters
+starting_salary <- 45000  # Starting salary in dollars
+trs_multiplier <- 0.02  # TRS multiplier (2% per year served)
+years_served <- 20  # Total years served
+retirement_age <- 65  # Retirement age
+
+# Define TRS contribution rates
+get_trs_rate <- function(salary) {
+  case_when(
+    salary <= 45000 ~ 0.03,
+    salary <= 55000 ~ 0.035,
+    salary <= 75000 ~ 0.045,
+    salary <= 100000 ~ 0.0575,
+    TRUE ~ 0.06
+  )
+}
+
+# Define ORP employer rates
+get_orp_employer_rate <- function(years_served) {
+  ifelse(years_served <= 7, 0.08, 0.10)
+}
+
+# Inflation adjustment for TRS
+adjust_inflation <- function(cpi) {
+  min(3, max(1, 0.5 * cpi))  # Cap adjustments between 1% and 3%
+}
+
+# Adjust the function to return individual weights for asset classes
+get_asset_allocation <- function(age) {
+  case_when(
+    age <= 49 ~ list(us_equities = 0.54, intl_equities = 0.36, bonds = 0.10, debt = 0),
+    age <= 59 ~ list(us_equities = 0.47, intl_equities = 0.32, bonds = 0.21, debt = 0),
+    age <= 74 ~ list(us_equities = 0.34, intl_equities = 0.23, bonds = 0.43, debt = 0),
+    TRUE ~ list(us_equities = 0.19, intl_equities = 0.13, bonds = 0.62, debt = 0.06)
+  )
+}
+
+# Expand asset allocation into separate columns for easier calculations
+filtered_data <- filtered_data %>%
+  mutate(asset_allocation = map(age, get_asset_allocation)) %>%
+  unnest_wider(asset_allocation)  # Spread list columns into individual columns
+
+# Calculate ORP account balance with expanded weights
+filtered_data <- filtered_data %>%
+  mutate(
+    orp_account_balance = cumsum(
+      orp_total_contribution * (
+        1 +
+          us_equity_return * us_equities +
+          intl_equity_return * intl_equities +
+          bond_return * bonds +
+          debt_return * debt
+      )
+    )
+  )
+
+
+# Calculate TRS value at retirement
+trs_final_average_salary <- filtered_data %>%
+  slice_tail(n = 36) %>%  # Use the last 3 years of salary
+  summarise(FAS = mean(salary)) %>%
+  pull(FAS)
+
+trs_annual_benefit <- trs_final_average_salary * years_served * trs_multiplier
+trs_monthly_benefit <- trs_annual_benefit / 12
+
+# Apply inflation adjustments to TRS benefit
+inflation_adjustments <- filtered_data %>%
+  mutate(cpi_rolling = rollmean(inflation, 12, fill = NA, align = "right")) %>%
+  summarise(
+    annual_adjustment = sum(adjust_inflation(cpi_rolling), na.rm = TRUE)
+  ) %>%
+  pull(annual_adjustment)
+
+adjusted_trs_annual_benefit <- trs_annual_benefit * (1 + inflation_adjustments / 100)
+
+# Calculate ORP account balance
+filtered_data <- filtered_data %>%
+  mutate(
+    orp_account_balance = cumsum(
+      orp_total_contribution * (
+        1 +
+          us_equity_return * get_asset_allocation(age)["us_equities"] +
+          intl_equity_return * get_asset_allocation(age)["intl_equities"] +
+          bond_return * get_asset_allocation(age)["bonds"] +
+          debt_return * get_asset_allocation(age)["debt"]
+      )
+    )
+  )
+
+orp_final_balance <- filtered_data %>%
+  summarise(final_balance = max(orp_account_balance, na.rm = TRUE)) %>%
+  pull(final_balance)
+
+orp_annual_withdrawal <- orp_final_balance * 0.04  # 4% withdrawal rule
+orp_monthly_withdrawal <- orp_annual_withdrawal / 12
+
+# Create a comparison table
+comparison <- tibble(
+  Plan = c("TRS", "ORP"),
+  Annual_Benefit = c(adjusted_trs_annual_benefit, orp_annual_withdrawal),
+  Monthly_Benefit = c(adjusted_trs_annual_benefit / 12, orp_monthly_withdrawal)
+)
+
+# Print results
+print("Comparison of TRS and ORP:")
+print(comparison)
+
+# Save the comparison as CSV
+write.csv(comparison, "/Users/aachalghimire/GitHub/STA9750-2024-FALL/trs_orp_comparison.csv", row.names = FALSE)
+
+```
+
+
+### 
+
+
+
+```{r}
+
+```
+
+
+```{r}
+
+
+```
+
+

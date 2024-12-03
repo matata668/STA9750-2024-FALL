@@ -16,6 +16,9 @@ MP02_cache
 test/
 data/
 
+FRED_apikey
+API_key
+*.png
 
 
 .DS_Store
