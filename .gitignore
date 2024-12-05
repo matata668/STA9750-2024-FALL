@@ -18,7 +18,9 @@ data/
 
 FRED_apikey
 API_key
-*.png
+Alpha_Vantage_API_key
+FRED_API_key
 
 
 .DS_Store
+
