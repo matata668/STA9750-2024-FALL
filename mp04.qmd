@@ -1,601 +1,894 @@
 ---
-title: "mp04"
+title: "Mini-Project #04: Monte Carlo-Informed Selection of CUNY Retirement Plans"
 author: "Aachal"
 editor: visual
+format:
+  html:
+    code-fold: true
 ---
 
-We are exploring the financial decision-makig process for new faculty at CUNY, who must choose between two retirement plans: the Teacher's Retirement System (TRS) and the Optional Retirement plan (ORP). This decision is critical and irrreversable. thus, a critical evaluation essentail. 
+We are exploring the financial decision-making process for new faculty at CUNY, who must choose between two retirement plans: the Teacher's Retirement System (TRS) and the Optional Retirement plan (ORP). This decision is critical and irreversible. Thus, a critical evaluation is essential.
 
-Using data- driven methodologies, this report aims to provide insight into the factors influencing the optimal choice for different individuals and scenarios. 
+Using data-driven methodologies, this report aims to provide insight into the factors influencing the optimal choice for different individuals and scenarios.
 
-The analysis relies on the historical data and resampling to simulate potential outcomes for each retirement plan. Key components of the report includes:
+The analysis relies on the historical data and re sampling to simulate potential outcomes for each retirement plan. Key components of the report includes:
 
- - Acquiring financial data through a password-protected API.
- - Employing bootstrap resampling to estimate probability distributions for outcomes.
- - Investigating the impact of variables such as market returns, inflation, starting salary, and retirement age on          decision-making.
- - Exploring how individual demographic and actuarial assumptions, as well as risk tolerance, influence the optimal         retirement strategy.
+-   Acquiring financial data through a password-protected API.
+-   Employing bootstrap resampling to estimate probability distributions for outcomes.
+-   Investigating the impact of variables such as market returns, inflation, starting salary, and retirement age on decision-making.
+-   Exploring how individual demographic and actuarial assumptions, as well as risk tolerance, influence the optimal retirement strategy.
 
-### Task 1.
+## Task 1 & Task 2
 
-We have registered for AlphaVantage API key, securely stored it, and configured my R environment to interact with the API. By leveraging the AlphaVantage API, I aim to retrieve data such as time series stock information, exchange rates, and other financial metrics to support my project's objectives, ensuring best practices for security and data handling throughout the process. 
+We have registered for AlphaVantage API key, securely stored it, and configured my R environment to interact with the API. By leveraging the AlphaVantage API, I aim to retrieve data such as time series stock information, exchange rates, and other financial metrics to support my project's objectives, ensuring best practices for security and data handling throughout the process.
 
-```{r warning=FALSE, message=FALSE}
-# Load the API key from the text file
-api_key <- readLines("/Users/aachalghimire/GitHub/STA9750-2024-FALL/API_key")
-
-library(httr)
-
-# Example API call
-response <- GET(
-  "https://www.alphavantage.co/query",
-  query = list(
-    'function' = "TIME_SERIES_DAILY",
-    symbol = "IBM",
-    apikey = api_key
-  )
-)
-data <- content(response, as = "parsed")
-print(data)
-
-```
-
-### Task 2
+## Task 2
 
 Similar to Task 1, we have now registered for the FRED API key, securely stored it, and configured my R environment to interact with the API.
 
-we have fetched observations for a chosen data series (e.g., GDP) and organized it into a structured data frame. We are focusing on extracting accurate date-wise values, ensuring the value column is numeric for analysis, and validating the data's time range through realtime_start and realtime_end. 
+we have fetched observations for a chosen data series (e.g., GDP) and organized it into a structured data frame. We are focusing on extracting accurate date-wise values, ensuring the value column is numeric for analysis, and validating the data's time range through realtime_start and realtime_end.
 
-```{r}
-# Load necessary libraries
-library(httr)
-library(jsonlite)
+## Task 3: Data Acquisition
 
-# Define the path to your API key file
-api_key_path <- "/Users/aachalghimire/GitHub/STA9750-2024-FALL/FRED_apikey"
+As our first step we begin by reading the Alpha Vantage and FRED API keys from local files. The current working directory is then dynamically retrieved, and a dedicated data directory is prepared to store output files. The script checks for the existence of this directory and creates it if necessary, establishing a consistent and organized location for saving data retrieved through API calls.
 
-# Read the API key securely
-fred_api_key <- readLines(api_key_path)
+```{r warning=FALSE, message=FALSE}
+#| Code-fold: true
+#| Code-summary: "show the code"
 
-# Function to fetch data from FRED
-fetch_fred_data <- function(series_id, start_date = NULL, end_date = NULL) {
-  # Define the base URL for FRED API
-  base_url <- "https://api.stlouisfed.org/fred/series/observations"
-  
-  # Construct query parameters
-  query_params <- list(
-    series_id = series_id,
-    api_key = fred_api_key,
-    file_type = "json",
-    observation_start = start_date,
-    observation_end = end_date
-  )
-  
-  # Make the API request
-  response <- GET(base_url, query = query_params)
-  
-  # Check for errors
-  if (http_status(response)$category != "Success") {
-    stop("Error fetching data: ", http_status(response)$message)
-  }
-  
-  # Parse the JSON response
-  data <- fromJSON(content(response, as = "text"), flatten = TRUE)
-  
-  # Extract the observations
-  observations <- data$observations
-  
-  # Convert the observations to a data frame
-  df <- as.data.frame(observations)
-  
-  # Ensure the value column is numeric
-  df$value <- as.numeric(df$value)
-  
-  return(df)
-}
-
-# Example usage: Fetching GDP data from 2000 to 2024
-fred_data <- fetch_fred_data(
-  series_id = "GDP", 
-  start_date = "2000-01-01", 
-  end_date = "2024-12-31"
-)
-
-# Print the first few rows of the data
-head(fred_data)
-
-# Save the data to a CSV file
-write.csv(fred_data, "fred_gdp_data.csv", row.names = FALSE)
-
-
-```
-### Task 3: Data Acquisition
-```{r}
-library(tidyverse)
+# Load required libraries
 library(httr2)
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(tibble)
+library(knitr)
 
-api_key_path <- "/Users/aachalghimire/GitHub/STA9750-2024-FALL/FRED_apikey"
+# Get the current working directory
+current_path <- getwd()
 
-# Read the API key securely
-fred_key <- readLines(api_key_path)
+# Define the 'data' directory path
+data_directory <- file.path(current_path, "data")
 
-alphavantage_key <- readLines("/Users/aachalghimire/GitHub/STA9750-2024-FALL/API_key")
-# Function to fetch data from FRED
-fetch_fred <- function(series_id, key) {
-  # Send request to FRED
-  response <- request("https://api.stlouisfed.org/fred/series/observations") %>%
-    req_url_query(
-      series_id = series_id,
-      api_key = key,
-      file_type = "json"
-    ) %>%
-    req_perform()
-  
-  # Parse and process the response
-  data <- response %>%
-    resp_body_json(simplifyVector = TRUE) %>%
-    .$observations %>%
-    as.data.frame()
-
-  data$date <- as.Date(data$date)
-  data$value <- as.numeric(data$value)
-  return(data %>% rename(month = date))
+# Check if the directory exists, and create it if it doesn't
+if (!dir.exists(data_directory)) {
+  dir.create(data_directory)
 }
 
-fetch_alpha_vantage <- function(symbol, key) {
-  # Send request to Alpha Vantage
-  response <- request("https://www.alphavantage.co/query") %>%
-    req_url_query(
-      `function` = "TIME_SERIES_DAILY",
-      symbol = symbol,
-      apikey = key,
-      outputsize = "full"
-    ) %>%
-    req_perform()
-  
-  # Parse the response
-  data <- response %>%
-    resp_body_json(simplifyVector = TRUE)
+alpha_vantage_api_key <- readLines(file.path(current_path, "Alpha_Vantage_API_key"))
+fred_api_key <- readLines(file.path(current_path, "FRED_API_key"))
 
-  # Check if 'Time Series (Daily)' exists in the response
-  if (!"Time Series (Daily)" %in% names(data)) {
-    stop("Error: The API response does not contain 'Time Series (Daily)' data. Check your API key, symbol, or request limits.")
-  }
-
-  # Extract raw time series and dates
-  time_series <- data$`Time Series (Daily)`
-  raw_dates <- names(time_series)
-  
-  # Ensure dates are valid
-  valid_dates <- raw_dates[nchar(raw_dates) == 10 & grepl("\\d{4}-\\d{2}-\\d{2}", raw_dates)]
-  parsed_dates <- as.Date(valid_dates, format = "%Y-%m-%d")
-  
-  # Subset time series to only valid dates
-  time_series <- time_series[valid_dates]
-  
-  # Transform the time series into a data frame
-  time_series_df <- do.call(rbind, lapply(time_series, as.data.frame))
-  colnames(time_series_df) <- c("open", "high", "low", "close", "volume")
-  
-  # Add the dates to the data frame
-  time_series_df$date <- parsed_dates
-  
-  # Convert relevant columns to numeric
-  time_series_df$close <- as.numeric(as.character(time_series_df$close))
-  
-  # Order by date
-  time_series_df <- time_series_df[order(time_series_df$date), ]
-
-  # Convert to monthly returns
-  monthly_data <- time_series_df %>%
-    mutate(month = floor_date(date, "month")) %>%
-    group_by(month) %>%
-    summarise(monthly_return = last(close) / first(close) - 1)
-  
-  return(monthly_data)
-}
-
-# Download datasets
-# 1. Wage Growth (FRED)
-data_wage <- fetch_fred("CES0500000003", fred_key) # Average Hourly Earnings
-
-# 2. Inflation (FRED)
-data_inflation <- fetch_fred("CPIAUCSL", fred_key) # Consumer Price Index
-
-# 3. US Equity Market Returns (Alpha Vantage)
-data_us_equity <- fetch_alpha_vantage("SPY", alphavantage_key) # S&P 500 ETF
-
-# 4. International Equity Market Returns (AlphaVantage)
-data_int_equity <- fetch_alpha_vantage("EFA", alphavantage_key) # iShares MSCI EAFE ETF
-
-# 5. Bond Market Returns (FRED)
-data_bond <- fetch_fred("BAMLHYH0A0HYM2TRIV", fred_key) # High-Yield Corporate Bond Index
-
-# 6. Short-Term Debt Returns (FRED)
-data_debt <- fetch_fred("TB3MS", fred_key) # 3-Month Treasury Bill Rate
-
-# Combine all datasets
-combined_data <- data_wage %>%
-  rename(wage_growth = value) %>%
-  full_join(data_inflation %>% rename(inflation = value), by = "month") %>%
-  full_join(data_us_equity %>% rename(us_equity_return = monthly_return), by = "month") %>%
-  full_join(data_int_equity %>% rename(intl_equity_return = monthly_return), by = "month") %>%
-  full_join(data_bond %>% rename(bond_return = value), by = "month") %>%
-  full_join(data_debt %>% rename(debt_return = value), by = "month")
-
-# Handle missing values (optional)
-combined_data <- combined_data %>%
-  mutate(across(everything(), ~ ifelse(is.na(.), lag(.), .)))
-
-# Save combined dataset
-write.csv(combined_data, "/Users/aachalghimire/GitHub/STA9750-2024-FALL/combined_data.csv", row.names = FALSE)
-
-# Print a preview of the combined data
-print(head(combined_data))
 ```
-# task 3 for last 20 years
-```{r}
-library(tidyverse)
-library(httr2)
 
-api_key_path <- "/Users/aachalghimire/GitHub/STA9750-2024-FALL/FRED_apikey"
+## Function to call API
 
-# Read the API key securely
-fred_key <- readLines(api_key_path)
-alphavantage_key <- readLines("/Users/aachalghimire/GitHub/STA9750-2024-FALL/API_key")
+We are now calling API to download the historical data for each data inputs mentioned below to begin with our Monte Carlo analysis
 
-# Define the start date (20 years ago from today)
-start_date <- Sys.Date() - years(20)
-
-# Function to fetch data from FRED
-fetch_fred <- function(series_id, key) {
-  # Send request to FRED
-  response <- request("https://api.stlouisfed.org/fred/series/observations") %>%
-    req_url_query(
-      series_id = series_id,
-      api_key = key,
-      file_type = "json"
-    ) %>%
-    req_perform()
-  
-  # Parse and process the response
-  data <- response %>%
-    resp_body_json(simplifyVector = TRUE) %>%
-    .$observations %>%
-    as.data.frame()
-
-  data$date <- as.Date(data$date)
-  data$value <- as.numeric(data$value)
-  
-  # Filter data for the last 20 years
-  return(data %>% filter(date >= start_date) %>% rename(month = date))
-}
-
-fetch_alpha_vantage <- function(symbol, key) {
-  # Send request to Alpha Vantage
-  response <- request("https://www.alphavantage.co/query") %>%
-    req_url_query(
-      `function` = "TIME_SERIES_DAILY",
-      symbol = symbol,
-      apikey = key,
-      outputsize = "full"
-    ) %>%
-    req_perform()
-  
-  # Parse the response
-  data <- response %>%
-    resp_body_json(simplifyVector = TRUE)
-
-  if (!"Time Series (Daily)" %in% names(data)) {
-    stop("Error: The API response does not contain 'Time Series (Daily)' data. Check your API key, symbol, or request limits.")
-  }
-
-  time_series <- data$`Time Series (Daily)`
-  raw_dates <- names(time_series)
-  valid_dates <- raw_dates[nchar(raw_dates) == 10 & grepl("\\d{4}-\\d{2}-\\d{2}", raw_dates)]
-  parsed_dates <- as.Date(valid_dates, format = "%Y-%m-%d")
-  
-  # Subset to valid dates
-  time_series <- time_series[valid_dates]
-  
-  time_series_df <- do.call(rbind, lapply(time_series, as.data.frame))
-  colnames(time_series_df) <- c("open", "high", "low", "close", "volume")
-  time_series_df$date <- parsed_dates
-  time_series_df$close <- as.numeric(as.character(time_series_df$close))
-  time_series_df <- time_series_df[order(time_series_df$date), ]
-  
-  # Filter to the last 20 years and calculate monthly returns
-  time_series_df <- time_series_df %>%
-    filter(date >= start_date) %>%
-    mutate(month = floor_date(date, "month")) %>%
-    group_by(month) %>%
-    summarise(monthly_return = last(close) / first(close) - 1)
-  
-  return(time_series_df)
-}
-
-# Download datasets
-data_wage <- fetch_fred("CES0500000003", fred_key) # Average Hourly Earnings
-data_inflation <- fetch_fred("CPIAUCSL", fred_key) # Consumer Price Index
-data_us_equity <- fetch_alpha_vantage("SPY", alphavantage_key) # S&P 500 ETF
-data_int_equity <- fetch_alpha_vantage("EFA", alphavantage_key) # iShares MSCI EAFE ETF
-data_bond <- fetch_fred("BAMLHYH0A0HYM2TRIV", fred_key) # High-Yield Corporate Bond Index
-data_debt <- fetch_fred("TB3MS", fred_key) # 3-Month Treasury Bill Rate
-
-# Combine all datasets
-combined_data <- data_wage %>%
-  rename(wage_growth = value) %>%
-  full_join(data_inflation %>% rename(inflation = value), by = "month") %>%
-  full_join(data_us_equity %>% rename(us_equity_return = monthly_return), by = "month") %>%
-  full_join(data_int_equity %>% rename(intl_equity_return = monthly_return), by = "month") %>%
-  full_join(data_bond %>% rename(bond_return = value), by = "month") %>%
-  full_join(data_debt %>% rename(debt_return = value), by = "month")
-
-# Handle missing values
-combined_data <- combined_data %>%
-  mutate(across(everything(), ~ ifelse(is.na(.), lag(.), .)))
-
-# Save combined dataset
-write.csv(combined_data, "/Users/aachalghimire/GitHub/STA9750-2024-FALL/combined_data.csv", row.names = FALSE)
-
-# Print preview of combined data
-print(head(combined_data))
-```
-Task 4: Investigation and Visualization of Input Data
-
-```{r}
+```{r warning=FALSE, message=FALSE}
 
 #| Code-fold: true
-#| Code-summary: "Show the code"
+#| Code-summary: "show the code"
 
+# Define functions to fetch data from APIs
+
+# FRED API Function
+fetch_fred_data <- function(series_id, api_key) {
+  response <- request("https://api.stlouisfed.org/fred/series/observations") %>%
+    req_url_query(
+      series_id = series_id,
+      api_key = api_key,
+      file_type = "json",
+      observation_start = "2008-12-31",
+      observation_end = "2024-11-30"
+    ) %>%
+    req_perform() %>%
+    resp_body_json()
+  
+  data <- response$observations %>%
+    purrr::map_df(~ data.frame(date = .x$date, value = as.numeric(.x$value))) %>%
+    dplyr::mutate(date = as.Date(date))
+  
+  return(data)
+}
+
+# AlphaVantage API Function
+fetch_alpha_data <- function(function_type, symbol, api_key) {
+  response <- request("https://www.alphavantage.co/query") %>%
+    req_url_query(
+      'function' = function_type,
+      symbol = symbol,
+      apikey = api_key
+    ) %>%
+    req_perform() %>%
+    resp_body_json()
+  
+  data <- response$`Monthly Adjusted Time Series` %>%
+    tibble::enframe(name = "date", value = "values") %>%
+    dplyr::mutate(
+      date = as.Date(date),
+      value = as.numeric(purrr::map_chr(values, "5. adjusted close"))
+    )
+  
+  return(data)
+}
+
+```
+
+### Average Hourly Earning
+
+```{r warning=FALSE, message=FALSE}
+#| Code-fold: true
+#| Code-summary: "show the code"
+
+
+wage_growth <- fetch_fred_data("CES0500000003", fred_api_key)
+kable(head(wage_growth, 5))
+
+```
+
+### Inflation
+
+```{r warning=FALSE, message=FALSE}
+#| Code-fold: true
+#| Code-summary: "show the code"
+
+
+inflation <- fetch_fred_data("CPIAUCSL", fred_api_key)
+kable(head(inflation,5))
+
+```
+
+### US Equity Market total returns
+
+```{r warning=FALSE, message=FALSE}
+#| Code-fold: true
+#| Code-summary: "show the code"
+
+
+us_equity <- fetch_alpha_data("TIME_SERIES_MONTHLY_ADJUSTED","SPY", alpha_vantage_api_key)
+kable(head(us_equity,5))
+
+```
+
+### International Equity Market Returns (Nasdaq Global Select via AlphaVantage)
+
+```{r warning=FALSE, message=FALSE}
+#| Code-fold: true
+#| Code-summary: "show the code"
+
+
+intl_equity <- fetch_alpha_data("TIME_SERIES_MONTHLY_ADJUSTED", "QQQ", alpha_vantage_api_key) # Nasdaq ETF
+kable(head(intl_equity,5))
+```
+
+### Bond Market Returns (10-Year Treasury Yields from FRED)
+
+```{r warning=FALSE, message=FALSE}
+#| Code-fold: true
+#| Code-summary: "show the code"
+
+
+bond_market <- fetch_fred_data("DGS10", fred_api_key) # 10-Year Treasury Constant Maturity
+kable(head(bond_market,5))
+```
+
+### Short-term Debt Returns (3-Month T-Bills from FRED)
+
+```{r warning=FALSE, message=FALSE}
+#| Code-fold: true
+#| Code-summary: "show the code"
+
+
+short_term_debt <- fetch_fred_data("TB3MS", fred_api_key) 
+kable(head(short_term_debt,5))
+```
+
+### Align Data to Monthly Frequency and Combined in single dataframe
+
+```{r warning=FALSE, message=FALSE}
+#| Code-fold: true
+#| Code-summary: "show the code"
+
+
+# Align Data to Monthly Frequency
+align_to_monthly <- function(data) {
+  data %>%
+    dplyr::mutate(month = floor_date(date, "month")) %>%
+    dplyr::group_by(month) %>%
+    dplyr::summarize(value = mean(value, na.rm = TRUE)) %>%
+    dplyr::ungroup() %>%
+    dplyr::rename(date = month)
+}
+
+wage_growth <- align_to_monthly(wage_growth)
+inflation <- align_to_monthly(inflation)
+bond_market <- align_to_monthly(bond_market)
+short_term_debt <- align_to_monthly(short_term_debt)
+us_equity_align <- align_to_monthly(us_equity)
+intl_equity_align <- align_to_monthly(intl_equity)
+
+# Combine All Data into a Single Data Frame
+combined_data <- wage_growth %>%
+  dplyr::rename(wage_growth = value) %>%
+  dplyr::left_join(inflation %>% dplyr::rename(inflation = value), by = "date") %>%
+  dplyr::left_join(us_equity_align %>% dplyr::rename(us_equity = value), by = "date") %>%
+  dplyr::left_join(intl_equity_align %>% dplyr::rename(intl_equity = value), by = "date") %>%
+  dplyr::left_join(bond_market %>% dplyr::rename(bond_market = value), by = "date") %>%
+  dplyr::left_join(short_term_debt %>% dplyr::rename(short_term_debt = value), by = "date")
+
+file_path <- file.path(data_directory, "monte_carlo_inputs.csv")
+write.csv(combined_data, file_path, row.names = FALSE)
+
+kable(head(combined_data))
+```
+
+## Task 4
+
+Utilizing the downloaded data for our various inputs,we are now going to analyze and identify their key properties.
+
+```{r warning=FALSE, message=FALSE}
+#| Code-fold: true
+#| Code-summary: "show the code"
+
+
+
+file_path <- file.path(data_directory, "monte_carlo_inputs.csv")
+cd <- read.csv(file_path, header = TRUE)
+tibble_data <- as_tibble(cd)
+
+# Convert a character column to Date format
+combined_data <- tibble_data %>%
+  mutate(date = as.Date(date, format = "%Y-%m-%d"))
+
+## Compute summary statistics and reshape into tidy format
+historical_stats <- combined_data %>%
+  summarise(
+    avg_wage_growth = mean(wage_growth, na.rm = TRUE),
+    var_wage_growth = var(wage_growth, na.rm = TRUE),
+    high_wage_growth = max(wage_growth, na.rm = TRUE),
+    low_wage_growth = min(wage_growth, na.rm = TRUE),
+    
+    avg_inflation = mean(inflation, na.rm = TRUE),
+    var_inflation = var(inflation, na.rm = TRUE),
+    high_inflation = max(inflation, na.rm = TRUE),
+    low_inflation = min(inflation, na.rm = TRUE),
+    
+    avg_us_equity = mean(us_equity, na.rm = TRUE),
+    var_us_equity = var(us_equity, na.rm = TRUE),
+    high_us_equity = max(us_equity, na.rm = TRUE),
+    low_us_equity = min(us_equity, na.rm = TRUE),
+    
+    avg_intl_equity = mean(intl_equity, na.rm = TRUE),
+    var_intl_equity = var(intl_equity, na.rm = TRUE),
+    high_intl_equity = max(intl_equity, na.rm = TRUE),
+    low_intl_equity = min(intl_equity, na.rm = TRUE),
+    
+    avg_bond_market = mean(bond_market, na.rm = TRUE),
+    var_bond_market = var(bond_market, na.rm = TRUE),
+    high_bond_market = max(bond_market, na.rm = TRUE),
+    low_bond_market = min(bond_market, na.rm = TRUE),
+    
+    avg_short_term_debt = mean(short_term_debt, na.rm = TRUE),
+    var_short_term_debt = var(short_term_debt, na.rm = TRUE),
+    high_short_term_debt = max(short_term_debt, na.rm = TRUE),
+    low_short_term_debt = min(short_term_debt, na.rm = TRUE)
+  ) %>%
+  pivot_longer(
+    everything(),
+    names_to = c("metric", "statistic"),
+    names_sep = "_",
+    values_to = "value"
+  ) %>%
+  pivot_wider(
+    names_from = statistic,
+    values_from = value
+  )
+
+
+file_path <- file.path(data_directory, "historical_stats.csv")
+write.csv(historical_stats, file_path, row.names = FALSE)
+
+# Display the summary table
+kable(historical_stats)
+
+```
+
+```{r warning=FALSE, message=FALSE}
+#| Code-fold: true
+#| Code-summary: "show the code"
+
+# Calculate correlation matrix to measure correlation among the variables
+correlation_matrix <- combined_data %>%
+  select(wage_growth, inflation, us_equity, intl_equity, bond_market, short_term_debt) %>%
+  cor(use = "complete.obs")
+
+# Print the correlation matrix
+kable(correlation_matrix)
+library(gt)
+
+# Convert correlation matrix to a data frame
+correlation_df <- as.data.frame(correlation_matrix)
+
+library(DT)
+
+# Convert correlation matrix to a data frame
+correlation_df <- as.data.frame(correlation_matrix)
+
+# Render interactive table
+datatable(correlation_df, caption = "Correlation Matrix")
+
+```
+
+### Heat map
+
+using the heat map visualization the correlation matrix, shows the strength and direction of relationships between variables. Dark red indicates strong positive correlations (close to 1), such as between intl_equity and us_equity or wage_growth and inflation, suggesting these variables move closely together. Lighter red areas, like the correlations involving bond_market, indicate weaker relationships, meaning these variables are less interdependent. The diagonal values represent perfect self-correlation (value of 1). This heatmap highlights key patterns and relationships, providing a foundation for deeper analysis.
+
+```{r warning=FALSE, message=FALSE}
 # Load necessary libraries
-library(dplyr)
+library(ggplot2)
+library(reshape2)
+
+# Convert correlation matrix to a long format for ggplot2
+correlation_long <- melt(correlation_matrix)
+
+# Plot the heatmap
+heatmap_plot <- ggplot(data = correlation_long, aes(x = Var1, y = Var2, fill = value)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0,
+                       limit = c(-1, 1), name = "Correlation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+  labs(title = "Correlation Heatmap",
+       x = "Variables",
+       y = "Variables")
+
+heatmap_path <- file.path(data_directory, "correlation_heatmap.png")
+ggsave(heatmap_path, plot = heatmap_plot, width = 8, height = 6)
+
+print(heatmap_plot)
+
+```
+
+### Time-series graph
+
+The time-series graph provides insights into how these economic factors change over time, showing their trends, growth patterns, and volatility. The most notable observation is the sharp upward trend in us_equity and intl_equity, particularly after 2015, reflecting significant growth in equity markets. In contrast, inflation shows a steady and gradual increase, indicating long-term stability. Meanwhile, bond_market, short_term_debt, and wage_growth remain relatively flat, signifying minimal variation over time. The graph also highlights volatility in equities, likely tied to economic cycles or market events.
+
+```{r warning=FALSE, message=FALSE}
+#| Code-fold: true
+#| Code-summary: "show the code"
+library(ggplot2)
+# Plot the time series for each factor to visualize trends
+long_run_plot <- combined_data %>%
+  tidyr::gather(key = "factor", value = "value", -date) %>%
+  ggplot(aes(x = date, y = value, color = factor)) +
+  geom_line() +
+  theme_minimal() +
+  labs(
+    title = "Time Series of Key Economic Factors",
+    x = "Date",
+    y = "Value",
+    color = "Factor"
+  )
+
+# Display the plot
+print(long_run_plot)
+```
+
+The time-series graph displays the trends and changes over time for each variable, highlighting patterns like growth, stability, or volatility in individual factors. It provides a temporal perspective, allowing us to see how variables evolve and fluctuate across different periods. In contrast, the heatmap visualizes the relationships between variables, showing the strength and direction of their correlations in a static snapshot. Together, these visualizations offer complementary insights: the time-series graph reveals dynamic trends, while the heat map emphasizes inter-variable connections.
+
+# Task 5: Retirement Plan Analysis
+
+```{r warning=FALSE, message=FALSE}
+#| Code-fold: true
+#| Code-summary: "show the code"
+kable(historical_stats)
+
+```
+
+```{r warning=FALSE, message=FALSE}
+#| Code-fold: true
+#| Code-summary: "show the code"
+
+# Function to calculate monthly ORP contribution based on salary and years employed
+calculate_orp_contribution <- function(salary, years_employed) {
+  # Determine employee contribution rate based on salary
+  if (salary <= 45000) {
+    emp_contrib_rate <- 0.03
+  } else if (salary <= 55000) {
+    emp_contrib_rate <- 0.035
+  } else if (salary <= 75000) {
+    emp_contrib_rate <- 0.045
+  } else if (salary <= 100000) {
+    emp_contrib_rate <- 0.0575
+  } else {
+    emp_contrib_rate <- 0.06
+  }
+
+  # Employer contribution after 7 years
+  emp_contrib_percentage <- ifelse(years_employed <= 7, 0.08, 0.10)
+
+  # Monthly contributions (employee + employer)
+  emp_contrib <- salary * emp_contrib_rate / 12
+  emp_contrib_total <- salary * emp_contrib_percentage / 12
+  total_contrib <- emp_contrib + emp_contrib_total
+  
+  # Ensure the contribution is within a reasonable range
+  if (total_contrib > salary * 0.5) {
+    warning("Contribution exceeds 50% of salary, which is unusually high.")
+  }
+  
+  return(total_contrib)
+}
+
+# Function to calculate ORP balance with annual growth rate
+calculate_orp_balance <- function(monthly_contribution, annual_growth_rate, years) {
+  # Ensure growth rate is within reasonable bounds (e.g., 3-7%)
+  if (annual_growth_rate < 0.03 | annual_growth_rate > 0.07) {
+    warning("The annual growth rate is outside the expected range (3-7%).")
+  }
+  
+  r <- annual_growth_rate / 12  # Monthly growth rate
+  n <- years * 12  # Total months
+  fv <- monthly_contribution * ((1 + r)^n - 1) / r  # Future value formula for compounding
+
+  # Check if the value is extremely large (indicating an overflow)
+  if (fv > 1e+12) {
+    warning("The future value of ORP is extremely large. Consider checking the growth rate or contributions.")
+  }
+  
+  return(fv)
+}
+
+# Function to calculate TRS monthly benefit
+calculate_trs_benefit <- function(salary, years_served, avg_inflation) {
+  # Final Average Salary
+  fas <- salary
+  
+  # Calculate benefit rate based on years served
+  if (years_served <= 20) {
+    trs_benefit_rate <- 0.0167 * years_served  # 1.67% per year
+  } else if (years_served == 20) {
+    trs_benefit_rate <- 0.0175 * years_served  # 1.75% per year
+  } else {
+    trs_benefit_rate <- 0.35 + (0.02 * years_served)  # Benefit rate for N > 20
+  }
+  
+  # Calculate annual benefit before inflation
+  annual_benefit <- fas * trs_benefit_rate
+  
+  # Apply inflation adjustment
+  inflation_adjustment <- min(0.03, max(0.01, 0.5 * avg_inflation / 100))
+  annual_benefit <- annual_benefit * (1 + inflation_adjustment)
+  
+  # Monthly benefit
+  monthly_benefit <- annual_benefit / 12
+  return(monthly_benefit)
+}
+
+# Function to calculate the present value of TRS benefits (final balance)
+calculate_trs_balance <- function(monthly_benefit, retirement_years, discount_rate) {
+  n <- retirement_years * 12  # Total retirement months
+  r <- discount_rate / 12     # Monthly discount rate
+  pv <- monthly_benefit * ((1 - (1 + r)^-n) / r)  # Present value of annuity formula
+  return(pv)
+}
+```
+
+```{r warning=FALSE, message=FALSE}
+#| Code-fold: true
+#| Code-summary: "show the code"
+# Calculate wage growth over time
+wage_growth_rate <- historical_stats$wage[1] / 100  # average wage growth rate per year
+inflation_rate <- historical_stats$inflation[1] / 100  # average inflation rate per year
+
+# Starting salary for December 2008 (use a reasonable estimate or a fixed value for simplicity)
+starting_salary <- 50000  # Example: $50,000 as initial salary in 2008
+
+# Simulate salary growth over the years
+years_employed <- 10
+salary_history <- numeric(years_employed)
+salary_history[1] <- starting_salary
+for (year in 2:years_employed) {
+  salary_history[year] <- salary_history[year - 1] * (1 + wage_growth_rate)
+}
+
+# Calculate ORP contribution for each year (employee + employer)
+orp_contributions <- numeric(years_employed)
+for (i in 1:years_employed) {
+  orp_contributions[i] <- calculate_orp_contribution(salary_history[i], i)
+}
+
+# Calculate final ORP balance at retirement (compounded)
+orp_final_balance <- calculate_orp_balance(orp_contributions[years_employed], 0.03, years_employed)
+
+# Calculate TRS monthly benefit
+trs_monthly_benefit <- calculate_trs_benefit(salary_history[years_employed], years_employed, inflation_rate)
+
+# Calculate TRS final balance (present value of monthly benefits)
+trs_final_balance <- calculate_trs_balance(trs_monthly_benefit, 20, 0.02)
+
+# Output the results for comparison
+cat("ORP Final Balance: $", round(orp_final_balance, 2), "\n")
+cat("TRS Monthly Benefit: $", round(trs_monthly_benefit, 2), "\n")
+cat("TRS Final Balance (present value): $", round(trs_final_balance, 2), "\n")
+
+
+
+```
+
+# Task 6
+
+Now, let us compare the reliability and financial outcomes of TRS and ORP over the employee's retirement to see which plan provides better financial security
+
+```{r warning=FALSE, message=FALSE}
+#| Code-fold: true
+#| Code-summary: "show the code"
+
+# Set up parameters
+retirement_age <- 65  # Starting retirement age
+death_age <- 85       # Estimated death age
+years_in_retirement <- death_age - retirement_age
+
+#"wage","inflation","us","intl","bond","short"
+# Set the long-term averages (using your computed averages)
+average_inflation <- historical_stats$inflation[1] / 100
+average_us_equity_return <- historical_stats$us[1] / 100
+average_intl_equity_return <- historical_stats$intl[1] / 100
+average_bond_market_return <- historical_stats$bond[1] / 100
+average_short_term_debt_return <- historical_stats$short[1] / 100
+
+# TRS Simulation Parameters
+initial_salary <- 50000   # Example salary at retirement
+TRS_contrib_rate <- 0.04  # Maximum contribution rate for TRS
+TRS_initial_benefit <- initial_salary * TRS_contrib_rate * 0.2  # Simplified pension calculation
+TRS_benefit_increase_rate <- min(0.03, max(0.01, 0.5 * average_inflation))  # Inflation cap for TRS
+
+# ORP Simulation Parameters
+ORP_employee_contrib_rate <- 0.04  # Example employee contribution rate
+ORP_employer_contrib_rate <- 0.06  # Example employer contribution rate
+ORP_account_balance <- 0  # Start with 0 balance at retirement
+
+# Function to simulate TRS
+simulate_TRS <- function(years) {
+  benefit <- TRS_initial_benefit
+  benefit_history <- numeric(years)
+  
+  for (i in 1:years) {
+    benefit_history[i] <- benefit
+    benefit <- benefit * (1 + TRS_benefit_increase_rate)  # Apply inflation adjustment
+  }
+  
+  return(benefit_history)
+}
+
+# Function to simulate ORP
+simulate_ORP <- function(salary, years) {
+  balance <- ORP_account_balance
+  withdrawal_history <- numeric(years)
+  
+  # Monthly contributions (employee + employer)
+  monthly_contrib <- (salary * ORP_employee_contrib_rate + salary * ORP_employer_contrib_rate) / 12
+  
+  for (i in 1:years) {
+    # Simulate returns (averaged return on investment)
+    annual_return <- (average_us_equity_return * 0.54 + average_intl_equity_return * 0.36 + average_bond_market_return * 0.10) / 100
+    balance <- balance * (1 + annual_return) + monthly_contrib * 12  # Apply annual return and contributions
+    withdrawal_history[i] <- balance * 0.04 / 12  # Assuming a 4% annual withdrawal rate
+    balance <- balance - withdrawal_history[i]  # Deduct monthly withdrawal
+    if (balance <= 0) break  # Stop if funds are exhausted
+  }
+  
+  return(withdrawal_history)
+}
+
+
+```
+
+### Simulate TRS and ORP for the retirement period
+
+```{r warning=FALSE, message=FALSE}
+#| Code-fold: true
+#| Code-summary: "show the code"
+trs_benefit <- simulate_TRS(years_in_retirement)
+orp_withdrawal <- simulate_ORP(initial_salary, years_in_retirement)
+
+# Analysis: Compare maximum, minimum, and average incomes
+max_trs_income <- max(trs_benefit)
+min_trs_income <- min(trs_benefit)
+avg_trs_income <- mean(trs_benefit)
+
+max_orp_income <- max(orp_withdrawal)
+min_orp_income <- min(orp_withdrawal)
+avg_orp_income <- mean(orp_withdrawal)
+
+# Data frame of results
+summary_comparison <- data.frame(
+  Plan = c("TRS", "ORP"),
+  Max_Income = c(format(round(max_trs_income, 2), nsmall = 2), 
+                 format(round(max_orp_income, 2), nsmall = 2)),
+  Min_Income = c(format(round(min_trs_income, 2), nsmall = 2), 
+                 format(round(min_orp_income, 2), nsmall = 2)),
+  Avg_Income = c(format(round(avg_trs_income, 2), nsmall = 2), 
+                 format(round(avg_orp_income, 2), nsmall = 2)),
+  Funds_Remaining_at_Death = c("N/A", 
+                               ifelse(length(orp_withdrawal) == years_in_retirement, 
+                                      "Exhausted", 
+                                      last(orp_withdrawal)))
+)
+
+
+# Print the summary comparison
+kable(summary_comparison)
+```
+
+The comparison highlights that the TRS plan offers greater stability and predictability, with a higher average monthly income of \$660.57 compared to ORP’s \$301.03. TRS ensures consistent benefits, making it ideal for retirees prioritizing financial security. On the other hand, the ORP plan provides flexibility, leaving a substantial balance of \$171,202.42 at death, which could benefit heirs or serve as a financial cushion. However, ORP’s fluctuating income, with a low minimum of \$26.67, poses a risk for retirees needing steady monthly income. Ultimately, TRS is better suited for stability-focused individuals, while ORP may appeal to those valuing legacy potential and market-based growth.
+
+```{r warning=FALSE, message=FALSE}
+# Load necessary libraries
 library(ggplot2)
 library(tidyr)
 
-# Ensure `month` is a Date object
-combined_data <- combined_data %>%
-  mutate(month = as.Date(month))
-
-# Compute long-run monthly averages
-long_run_averages <- combined_data %>%
-  summarise(
-    avg_wage_growth = mean(wage_growth, na.rm = TRUE),
-    avg_inflation = mean(inflation, na.rm = TRUE),
-    avg_us_equity_return = mean(us_equity_return, na.rm = TRUE),
-    avg_intl_equity_return = mean(intl_equity_return, na.rm = TRUE),
-    avg_bond_return = mean(bond_return, na.rm = TRUE),
-    avg_debt_return = mean(debt_return, na.rm = TRUE)
-  )
-
-# Print the long-run averages as a table
-print("Long-Run Monthly Averages:")
-print(long_run_averages)
-
-# Save the long-run averages table as a CSV
-write.csv(long_run_averages, "/Users/aachalghimire/GitHub/STA9750-2024-FALL/long_run_averages.csv", row.names = FALSE)
-
-# Compute the correlation matrix
-correlation_matrix <- combined_data %>%
-  select(where(is.numeric)) %>%
-  cor(use = "complete.obs")
-
-# Convert correlation matrix to a data frame
-correlation_df <- as.data.frame(correlation_matrix) %>%
-  rownames_to_column(var = "Variable1") %>%
-  pivot_longer(-Variable1, names_to = "Variable2", values_to = "value")
-
-# Print the correlation data frame
-print("Correlation Data Frame:")
-print(head(correlation_df))
-
-# Save the correlation data frame as a CSV
-write.csv(correlation_df, "/Users/aachalghimire/GitHub/STA9750-2024-FALL/correlation_matrix_long.csv", row.names = FALSE)
-
-# Create a heat map for the correlation matrix
-heatmap_plot <- ggplot(correlation_df, aes(x = Variable1, y = Variable2, fill = value)) +
-  geom_tile(color = "white") +
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0, limit = c(-1, 1), space = "Lab", name = "Correlation") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  labs(title = "Correlation Heat Map", x = "Variable", y = "Variable")
-
-# Save the heatmap
-ggsave(
-  "/Users/aachalghimire/GitHub/STA9750-2024-FALL/correlation_heatmap.png",
-  plot = heatmap_plot,
-  width = 8, height = 6
+# Melt the data frame for easier plotting (long format)
+library(reshape2)
+melted_data <- melt(
+  summary_comparison[, c("Plan", "Max_Income", "Min_Income", "Avg_Income")],
+  id.vars = "Plan",
+  variable.name = "Income_Type",
+  value.name = "Value"
 )
 
-# Display the heatmap
-print(heatmap_plot)
+# Convert Value column to numeric
+melted_data$Value <- as.numeric(melted_data$Value)
 
-# Compute summary statistics (mean, variance, SD) for all numeric variables
-summary_table <- combined_data %>%
-  select(where(is.numeric)) %>%  # Select only numeric columns
-  summarise(
-    across(
-      everything(),
-      list(
-        mean = ~mean(.x, na.rm = TRUE),
-        variance = ~var(.x, na.rm = TRUE),
-        sd = ~sd(.x, na.rm = TRUE)
-      ),
-      .names = "{.col}_{.fn}"  # Name the new columns as "variable_stat"
-    )
-  ) %>%
-  pivot_longer(
-    cols = everything(),
-    names_to = c("Variable", "Statistic"),
-    names_pattern = "^(.*)_(.*)$",  # Properly split variable and statistic names
-    values_to = "Value"
-  ) %>%
-  pivot_wider(
-    names_from = "Statistic",
-    values_from = "Value",
-    values_fn = mean  # Resolve any duplicate entries
-  )
+# Create the bar chart
+plot <- ggplot(melted_data, aes(x = Plan, y = Value, fill = Income_Type)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(
+    title = "Income Comparison by Plan",
+    x = "Plan",
+    y = "Income",
+    fill = "Income Type"
+  ) +
+  theme_minimal()
 
-# Ensure all columns are numeric and not lists
-summary_table <- summary_table %>%
-  mutate(across(where(is.list), ~unlist(.)))  # Convert list columns to atomic vectors
+# Annotate Funds_Remaining_at_Death
+plot <- plot +
+  geom_text(data = summary_comparison, 
+            aes(x = Plan, y = max(melted_data$Value) + 50, 
+                label = Funds_Remaining_at_Death),
+            inherit.aes = FALSE, color = "red", size = 4) +
+  annotate("text", x = 1.5, y = max(melted_data$Value) + 100, 
+           label = "Funds Remaining at Death", 
+           color = "red", fontface = "italic")
 
-# Print the summary table (Mean, Variance, SD)
-print("Corrected Summary Table (Mean, Variance, SD):")
-print(summary_table)
-
-# Save the summary table as a CSV file
-write.csv(summary_table, "/Users/aachalghimire/GitHub/STA9750-2024-FALL/summary_table.csv", row.names = FALSE)
+# Print the plot
+print(plot)
 
 ```
 
-### Task 5: Historical Comparison of TRS and ORP
+# Task 7: Bootstrap (Monte Carlo) comparision
 
-```{r}
-#| Code-fold: true
-#| Code-summary: "Show the code"
+### Bootstrap sampling for historical data
 
+The probability that an ORP employee exhausts their savings before death.
 
-
+```{r warning=FALSE, message=FALSE}
+# Required libraries
 library(dplyr)
-library(lubridate)
-library(tidyr)
-library(zoo)
 
-# Define joining and retirement dates
-joined_date <- combined_data %>% slice_tail(n = 1) %>% pull(month) - years(20)
-retired_date <- combined_data %>% slice_tail(n = 1) %>% pull(month)
+# Load historical data
+file_path <- file.path(data_directory, "monte_carlo_inputs.csv")
+cd <- read.csv(file_path, header = TRUE)
+tibble_data <- as_tibble(cd)
 
-# Filter data for the 20-year period
-filtered_data <- combined_data %>%
-  filter(month >= joined_date & month <= retired_date) %>%
-  arrange(month)
+# Convert date column
+combined_data <- tibble_data %>%
+  mutate(date = as.Date(date, format = "%Y-%m-%d"))
 
-# Initial parameters
-starting_salary <- 45000  # Starting salary in dollars
-trs_multiplier <- 0.02  # TRS multiplier (2% per year served)
-years_served <- 20  # Total years served
-retirement_age <- 65  # Retirement age
+# Generate 200 bootstrap histories for "while working" and "while retired" periods
+set.seed(1)
+B <- 10  # Number of bootstrap histories
 
-# Define TRS contribution rates
-get_trs_rate <- function(salary) {
-  case_when(
-    salary <= 45000 ~ 0.03,
-    salary <= 55000 ~ 0.035,
-    salary <= 75000 ~ 0.045,
-    salary <= 100000 ~ 0.0575,
-    TRUE ~ 0.06
+working_bootstrap <- replicate(B, sample(combined_data$wage_growth, size = nrow(combined_data), replace = TRUE))
+retired_bootstrap <- replicate(B, sample(combined_data$inflation, size = nrow(combined_data), replace = TRUE))
+
+# Define simulation functions for ORP and TRS
+# Monte Carlo Simulation
+retirement_years <- 20  # Retirement duration in years
+salary <- 50000  # Starting salary
+years_employed <- 15  # Total years worked
+
+orp_exhausted <- numeric(B)  # To track ORP exhaustion outcomes
+orp_distributions <- numeric(B)  # Track ORP benefits
+trs_distributions <- numeric(B)  # Track TRS benefits
+
+# Simulate for B bootstrapped samples
+for (i in 1:B) {
+  # Simulate ORP
+  monthly_contribution <- calculate_orp_contribution(salary, years_employed)
+  orp_balance <- calculate_orp_balance(
+    monthly_contribution = monthly_contribution,
+    annual_growth_rate = mean(retired_bootstrap[, i]),  # Use inflation sample as growth rate
+    years = years_employed
   )
+  # Track ORP balance after withdrawals (assuming 4% withdrawal rate)
+  orp_balance_remaining <- orp_balance
+  for (j in 1:retirement_years) {
+    withdrawal <- orp_balance_remaining * 0.04  # Assume 4% withdrawal rate
+    orp_balance_remaining <- orp_balance_remaining - withdrawal
+    if (orp_balance_remaining <= 0) {
+      orp_exhausted[i] <- 1  # ORP exhausted
+      break
+    }
+  }
+  if (orp_balance_remaining > 0) {
+    orp_exhausted[i] <- 0  # ORP lasted through retirement
+  }
+  
+  # Simulate TRS
+  trs_monthly_benefit <- calculate_trs_benefit(
+    salary = salary,
+    years_served = years_employed,
+    avg_inflation = mean(retired_bootstrap[, i])  # Inflation sample
+  )
+  trs_balance <- calculate_trs_balance(
+    monthly_benefit = trs_monthly_benefit,
+    retirement_years = retirement_years,
+    discount_rate = 0.03  # Assume 3% discount rate
+  )
+  
+  # Store distributions
+  trs_distributions[i] <- trs_balance
+  orp_distributions[i] <- orp_balance_remaining
 }
 
-# Define ORP employer rates
-get_orp_employer_rate <- function(years_served) {
-  ifelse(years_served <= 7, 0.08, 0.10)
-}
+# Probability of ORP savings exhaustion
+prob_orp_exhaustion <- mean(orp_exhausted)
 
-# Inflation adjustment for TRS
-adjust_inflation <- function(cpi) {
-  min(3, max(1, 0.5 * cpi))  # Cap adjustments between 1% and 3%
-}
-
-# Adjust the function to return individual weights for asset classes
-get_asset_allocation <- function(age) {
-  case_when(
-    age <= 49 ~ list(us_equities = 0.54, intl_equities = 0.36, bonds = 0.10, debt = 0),
-    age <= 59 ~ list(us_equities = 0.47, intl_equities = 0.32, bonds = 0.21, debt = 0),
-    age <= 74 ~ list(us_equities = 0.34, intl_equities = 0.23, bonds = 0.43, debt = 0),
-    TRUE ~ list(us_equities = 0.19, intl_equities = 0.13, bonds = 0.62, debt = 0.06)
+# Summary of results
+summary_results <- data.frame(
+  Metric = c("Probability of ORP Savings Exhaustion", "Mean TRS Benefits", "Mean ORP Benefits"),
+  Value = c(
+    prob_orp_exhaustion,
+    mean(trs_distributions),
+    mean(orp_distributions)
   )
-}
-
-# Expand asset allocation into separate columns for easier calculations
-filtered_data <- filtered_data %>%
-  mutate(asset_allocation = map(age, get_asset_allocation)) %>%
-  unnest_wider(asset_allocation)  # Spread list columns into individual columns
-
-# Calculate ORP account balance with expanded weights
-filtered_data <- filtered_data %>%
-  mutate(
-    orp_account_balance = cumsum(
-      orp_total_contribution * (
-        1 +
-          us_equity_return * us_equities +
-          intl_equity_return * intl_equities +
-          bond_return * bonds +
-          debt_return * debt
-      )
-    )
-  )
-
-
-# Calculate TRS value at retirement
-trs_final_average_salary <- filtered_data %>%
-  slice_tail(n = 36) %>%  # Use the last 3 years of salary
-  summarise(FAS = mean(salary)) %>%
-  pull(FAS)
-
-trs_annual_benefit <- trs_final_average_salary * years_served * trs_multiplier
-trs_monthly_benefit <- trs_annual_benefit / 12
-
-# Apply inflation adjustments to TRS benefit
-inflation_adjustments <- filtered_data %>%
-  mutate(cpi_rolling = rollmean(inflation, 12, fill = NA, align = "right")) %>%
-  summarise(
-    annual_adjustment = sum(adjust_inflation(cpi_rolling), na.rm = TRUE)
-  ) %>%
-  pull(annual_adjustment)
-
-adjusted_trs_annual_benefit <- trs_annual_benefit * (1 + inflation_adjustments / 100)
-
-# Calculate ORP account balance
-filtered_data <- filtered_data %>%
-  mutate(
-    orp_account_balance = cumsum(
-      orp_total_contribution * (
-        1 +
-          us_equity_return * get_asset_allocation(age)["us_equities"] +
-          intl_equity_return * get_asset_allocation(age)["intl_equities"] +
-          bond_return * get_asset_allocation(age)["bonds"] +
-          debt_return * get_asset_allocation(age)["debt"]
-      )
-    )
-  )
-
-orp_final_balance <- filtered_data %>%
-  summarise(final_balance = max(orp_account_balance, na.rm = TRUE)) %>%
-  pull(final_balance)
-
-orp_annual_withdrawal <- orp_final_balance * 0.04  # 4% withdrawal rule
-orp_monthly_withdrawal <- orp_annual_withdrawal / 12
-
-# Create a comparison table
-comparison <- tibble(
-  Plan = c("TRS", "ORP"),
-  Annual_Benefit = c(adjusted_trs_annual_benefit, orp_annual_withdrawal),
-  Monthly_Benefit = c(adjusted_trs_annual_benefit / 12, orp_monthly_withdrawal)
 )
 
-# Print results
-print("Comparison of TRS and ORP:")
-print(comparison)
+# Output the results
+kable(summary_results)
 
-# Save the comparison as CSV
-write.csv(comparison, "/Users/aachalghimire/GitHub/STA9750-2024-FALL/trs_orp_comparison.csv", row.names = FALSE)
-
-```
-
-
-### 
-
-
-
-```{r}
+# Visualize the distributions
+hist(trs_distributions, breaks = 20, col = "blue", main = "TRS Benefits Distribution", xlab = "Total Benefits")
+hist(orp_distributions, breaks = 20, col = "green", main = "ORP Benefits Distribution", xlab = "Remaining ORP Balance")
 
 ```
 
+the probability that an ORP employee has a higher monthly income in retirement than a TRS employee?
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 
+#| Code-fold: true
+#| Code-summary: "show the code"
+
+
+# Monte Carlo Simulation to Compare Monthly Incomes
+orp_monthly_incomes <- numeric(B)  # To store monthly ORP incomes
+trs_monthly_incomes <- numeric(B)  # To store monthly TRS incomes
+
+for (i in 1:B) {
+  # Calculate ORP Monthly Income
+  orp_balance <- 0
+  working_sample <- working_bootstrap[, i]
+  retired_sample <- retired_bootstrap[, i]
+  
+  # Simulate ORP Savings Accumulation
+  for (j in 1:years_employed) {
+    contribution <- calculate_orp_contribution(salary * (1 + working_sample[j]), j)
+    annual_growth_rate <- retired_sample[j] / 100  # Use inflation as growth
+    orp_balance <- orp_balance * (1 + annual_growth_rate) + contribution
+  }
+  
+  # Calculate ORP Monthly Income during Retirement
+  orp_monthly_incomes[i] <- orp_balance / (retirement_years * 12)  # Spread across retirement years
+  
+  # Calculate TRS Monthly Income
+  trs_monthly_incomes[i] <- calculate_trs_benefit(
+    salary = salary,
+    years_served = years_employed,
+    avg_inflation = mean(retired_sample)
+  )
+}
+
+# Compare ORP vs TRS Monthly Incomes
+orp_higher <- sum(orp_monthly_incomes > trs_monthly_incomes)
+prob_orp_higher <- orp_higher / B
+
+# Output Results
+cat("Probability that an ORP employee has a higher monthly income than a TRS employee:", prob_orp_higher, "\n")
+
+# Visualize Distributions
+hist(orp_monthly_incomes, breaks = 20, col = "green", main = "ORP Monthly Incomes", xlab = "Monthly Income")
+hist(trs_monthly_incomes, breaks = 20, col = "blue", main = "TRS Monthly Incomes", xlab = "Monthly Income")
 
 ```
 
+Is the 4% withdrawal rate actually a good idea or would you recommend a different withdrawal rate?
 
+We are now going to analyze the sustainability of different withdrawal rates (e.g., 3%, 4%, and 5%) using a Monte Carlo simulation. The goal is to justify whether the 4% rule is a good idea or if another rate might be better, based on portfolio longevity.
+
+```{r warning=FALSE, message=FALSE}
+#| Code-fold: true
+#| Code-summary: "show the code"
+
+
+# Load required library
+library(ggplot2)
+
+# Simulation Parameters
+set.seed(123)
+initial_balance <- 1000000  # Initial portfolio balance ($1,000,000)
+years_in_retirement <- 30   # Number of retirement years
+num_simulations <- 1000     # Number of Monte Carlo simulations
+withdrawal_rates <- c(0.03, 0.04, 0.05)  # Test 3%, 4%, and 5% withdrawal rates
+mean_return <- 0.06         # Mean annual portfolio return (6%)
+sd_return <- 0.15           # Standard deviation of returns (15%)
+
+# Function to simulate portfolio balance for a given withdrawal rate
+simulate_portfolio <- function(initial_balance, withdrawal_rate, years, mean_return, sd_return) {
+  balances <- numeric(years)  # Track yearly balances
+  balances[1] <- initial_balance
+  
+  for (i in 2:years) {
+    annual_return <- rnorm(1, mean = mean_return, sd = sd_return)  # Random annual return
+    balances[i] <- balances[i - 1] * (1 + annual_return) - (withdrawal_rate * initial_balance)
+    if (balances[i] < 0) {  # Portfolio exhausted
+      balances[i] <- 0
+      break
+    }
+  }
+  return(balances)
+}
+
+# Monte Carlo Simulation for each withdrawal rate
+results <- data.frame(Year = 1:years_in_retirement)
+for (rate in withdrawal_rates) {
+  rate_results <- replicate(num_simulations, simulate_portfolio(initial_balance, rate, years_in_retirement, mean_return, sd_return))
+  rate_prob_exhausted <- rowMeans(rate_results == 0)  # Probability of exhaustion at each year
+  results <- cbind(results, setNames(data.frame(rate_prob_exhausted), paste0("Rate_", rate * 100, "%")))
+}
+
+# Visualize the probability of portfolio exhaustion
+results_long <- reshape2::melt(results, id.vars = "Year", variable.name = "Withdrawal_Rate", value.name = "Probability")
+ggplot(results_long, aes(x = Year, y = Probability, color = Withdrawal_Rate)) +
+  geom_line(size = 1) +
+  labs(title = "Probability of Portfolio Exhaustion Over Time",
+       x = "Year of Retirement",
+       y = "Probability of Exhaustion",
+       color = "Withdrawal Rate") +
+  theme_minimal()
+  
+```
+
+```{r warning=FALSE, message=FALSE}
+#| Code-fold: true
+#| Code-summary: "show the code"
+
+# Calculate sustainability percentages (probability of portfolio not exhausting)
+sustainability <- data.frame(
+  Withdrawal_Rate = withdrawal_rates * 100,
+  Sustainability_Percentage = 100 - colMeans(results[-1] * 100)
+)
+
+kable(sustainability)
+```
+
+The graph illustrates the probability of portfolio exhaustion over 30 years for three different withdrawal rates: 3%, 4%, and 5%. The 3% withdrawal rate consistently has the lowest probability of exhaustion, remaining near zero throughout the retirement period, demonstrating high sustainability. The 4% rate shows a slight increase in exhaustion probability over time, reaching approximately 3% by year 30, indicating it is a reasonably safe withdrawal strategy. In contrast, the 5% rate displays a significantly higher risk, with the probability of exhaustion rising steadily and reaching around 8% by the end of the retirement period. This highlights that higher withdrawal rates carry increased risks of depleting savings, especially under adverse market conditions.
+
+# Conclusion
+
+As a financial advisor, my goal is to guide you in selecting the retirement plan that best aligns with your financial goals, current circumstances, and risk tolerance. Based on the analysis conducted in Task 7, the findings highlight key differences between the Teachers' Retirement System (TRS) and the Optional Retirement Program (ORP) offered by CUNY. TRS provides a defined benefit plan, guaranteeing stable and predictable monthly income during retirement, making it an excellent choice for employees with low risk tolerance or those who prioritize certainty in their retirement planning. This plan shields retirees from market fluctuations and is particularly suited for individuals with a longer expected lifetime or starting salaries below \$70,000, where income stability is essential. On the other hand, ORP, a defined contribution plan, offers greater flexibility and potentially higher returns based on market performance. However, this comes with the risk of exhausting savings if withdrawals are not carefully managed. Our simulations suggest that maintaining a 4% withdrawal rate balances income needs and sustainability, with a 97% probability of savings lasting 30 years. Higher withdrawal rates, such as 5%, significantly increase the risk of portfolio depletion during adverse market conditions.
+
+When deciding between TRS and ORP, consider your age, salary, expected lifetime, and risk tolerance. If you are younger (e.g., 25–30) with a moderate to high starting salary (e.g., above \$70,000), ORP may be more attractive due to potential long-term growth through compounding and employer contributions. However, if you are closer to mid-career or retirement age, TRS is likely the better choice as it provides more predictable income in retirement. Employees with a longer expected lifetime may also prefer TRS for its consistent payments, while ORP requires careful financial planning to ensure savings last through retirement. If you are risk-averse or prefer a conservative approach, TRS offers stability and peace of mind. Conversely, if you are comfortable with market fluctuations, have the financial knowledge to manage your portfolio actively, and are willing to take on uncertainty, ORP may yield higher long-term benefits.
+
+It is important to acknowledge the uncertainty and limitations of the analysis. The simulations rely on historical market performance, which may not predict future trends, particularly during periods of extreme volatility or sustained inflation. Additionally, assumptions such as constant salary growth and static withdrawal rates may not reflect individual circumstances or real-world complexities. Personal variables, such as unexpected healthcare costs or early retirement, are not fully accounted for. Despite these limitations, if you are risk-averse, prioritize stability, or anticipate a longer-than-average retirement, TRS is likely the better choice. However, if you are comfortable with market fluctuations, starting your career early, and earning a higher salary, ORP could provide greater flexibility and growth potential. Ultimately, the decision should reflect your financial goals, personal situation, and willingness to adapt to changing circumstances. Regular consultation with a financial advisor to reassess your plans is highly recommended.

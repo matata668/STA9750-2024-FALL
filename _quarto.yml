@@ -1,6 +1,6 @@
 project:
   type: website
-  output-dir: docs
+  output-dir: .
 
 website:
   title: "STA 9750 2024 Submission Material"
