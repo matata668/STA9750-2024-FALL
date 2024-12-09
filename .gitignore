@@ -9,7 +9,6 @@
 *.tsv.gz
 *.csv.zip
 
-
 MP02.Aachal_cache
 MP02.Aachal_files
 MP02_cache
@@ -20,7 +19,6 @@ FRED_apikey
 API_key
 Alpha_Vantage_API_key
 FRED_API_key
-
 
 .DS_Store
 
