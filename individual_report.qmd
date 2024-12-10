@@ -1,5 +1,5 @@
 ---
-title: "STA 9750- Final project"
+title: "Final Individual Report"
 author: "Aachal"
 date: "2024-12-08"
 output: html_document
