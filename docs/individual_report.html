@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Aachal">
+<meta name="author" content="Aachal Ghimire">
 <meta name="dcterms.date" content="2024-12-08">
 
 <title>Final Individual Report – STA 9750 2024 Submission Material</title>
@@ -143,7 +143,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Aachal </p>
+             <p>Aachal Ghimire </p>
           </div>
   </div>
     
@@ -223,7 +223,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>We are automating data analysis using two publicly available data sets from NYC Open Data:</p>
 <ul>
 <li><p><a href="https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/43nn-pn8j/data">DOHMH New York City Restaurant Inspection Results</a></p></li>
-<li><p><a href="https://data.cityofnewyork.us/Health/Rats/idp8-qjf7">Rats</a></p></li>
+<li><p><a href="https://data.cityofnewyork.us/Health/Rats/idp8-qjf7">Rats activity recorded in restaurants by borough</a></p></li>
 </ul>
 <p>We chose these data sets because they contain detailed information about rat infestations in New York City, collected by the NYC Department of Health and Mental Hygiene (DOHMH), Division of Environmental Health Pest Control. By leveraging this data, we aim to analyze the prevalence and distribution of rat activity across various NYC neighborhoods.</p>
 <p><strong>Methodology</strong></p>
@@ -866,36 +866,6 @@ reliable measure of rat activity by focusing on confirmed rodent sightings or in
 </div>
 </div>
 </div>
-</section>
-<section id="key-observations-across-boroughs" class="level4">
-<h4 class="anchored" data-anchor-id="key-observations-across-boroughs"><strong>Key Observations Across Boroughs</strong>:</h4>
-<ol type="1">
-<li><strong>Bronx</strong>:
-<ul>
-<li>The ZIP codes <strong>10457 and 10458</strong> show <strong>higher rat density</strong> (above 12,000) while also exhibiting a significant number of restaurants with <strong>Grade B and C</strong>.</li>
-<li>There seems to be a noticeable link between the increase in rat activity and areas with more restaurants receiving lower grades.</li>
-</ul></li>
-<li><strong>Brooklyn</strong>:
-<ul>
-<li>ZIP codes <strong>11215 and 11222</strong> show the highest rat densities (over 20,000), corresponding to relatively high numbers of restaurants with <strong>Grade B and C</strong>.</li>
-<li>Rat infestations in Brooklyn appear to cluster in specific ZIP codes, suggesting that localized waste management issues may be contributing to the problem.</li>
-</ul></li>
-<li><strong>Manhattan</strong>:
-<ul>
-<li>ZIP codes <strong>10013 and 10036</strong> have both the highest number of restaurants with <strong>Grade B and C</strong> (over 600) and noticeable rat activity.</li>
-<li>Despite a significant concentration of lower-graded restaurants, rat densities remain moderate compared to other boroughs, suggesting <strong>more effective urban management</strong> in some areas.</li>
-</ul></li>
-<li><strong>Queens</strong>:
-<ul>
-<li>ZIP codes <strong>11385 and 11373</strong> show the <strong>highest rat densities</strong> and a considerable number of restaurants with <strong>Grade B and C</strong>.</li>
-<li>Rat density appears to peak sharply in specific ZIP codes, correlating with localized concentrations of lower-graded restaurants.</li>
-</ul></li>
-<li><strong>Staten Island</strong>:
-<ul>
-<li>Staten Island has the <strong>lowest rat </strong> across all ZIP codes, with a small number of lower-graded restaurants.</li>
-<li>ZIP code <strong>10301</strong> has the highest rat density (600) but relatively fewer restaurants compared to other boroughs.</li>
-</ul></li>
-</ol>
 <div class="cell">
 <details class="code-fold">
 <summary>show the code</summary>
@@ -989,7 +959,34 @@ reliable measure of rat activity by focusing on confirmed rodent sightings or in
 <span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a><span class="co"># knitr::include_graphics("nyc_high_density_animation.gif")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p><img src="nyc_high_density_animation.gif" class="img-fluid" width="800"></p>
+<p><img src="nyc_high_density_animation.gif" class="img-fluid" width="800"> #### <strong>Key Observations Across Boroughs</strong>:</p>
+<ol type="1">
+<li><strong>Bronx</strong>:
+<ul>
+<li>The ZIP codes <strong>10457 and 10458</strong> show <strong>higher rat density</strong> (above 12,000) while also exhibiting a significant number of restaurants with <strong>Grade B and C</strong>.</li>
+<li>There seems to be a noticeable link between the increase in rat activity and areas with more restaurants receiving lower grades.</li>
+</ul></li>
+<li><strong>Brooklyn</strong>:
+<ul>
+<li>ZIP codes <strong>11215 and 11222</strong> show the highest rat densities (over 20,000), corresponding to relatively high numbers of restaurants with <strong>Grade B and C</strong>.</li>
+<li>Rat infestations in Brooklyn appear to cluster in specific ZIP codes, suggesting that localized waste management issues may be contributing to the problem.</li>
+</ul></li>
+<li><strong>Manhattan</strong>:
+<ul>
+<li>ZIP codes <strong>10013 and 10036</strong> have both the highest number of restaurants with <strong>Grade B and C</strong> (over 600) and noticeable rat activity.</li>
+<li>Despite a significant concentration of lower-graded restaurants, rat densities remain moderate compared to other boroughs, suggesting <strong>more effective urban management</strong> in some areas.</li>
+</ul></li>
+<li><strong>Queens</strong>:
+<ul>
+<li>ZIP codes <strong>11385 and 11373</strong> show the <strong>highest rat densities</strong> and a considerable number of restaurants with <strong>Grade B and C</strong>.</li>
+<li>Rat density appears to peak sharply in specific ZIP codes, correlating with localized concentrations of lower-graded restaurants.</li>
+</ul></li>
+<li><strong>Staten Island</strong>:
+<ul>
+<li>Staten Island has the <strong>lowest rat </strong> across all ZIP codes, with a small number of lower-graded restaurants.</li>
+<li>ZIP code <strong>10301</strong> has the highest rat density (600) but relatively fewer restaurants compared to other boroughs.</li>
+</ul></li>
+</ol>
 </section>
 <section id="learnings" class="level4">
 <h4 class="anchored" data-anchor-id="learnings"><strong>Learnings</strong>:</h4>
