@@ -347,7 +347,7 @@ animated_map <- ggplot() +
 
 ```
 ![](nyc_high_density_animation.gif){width=800px}
-#### **Key Observations Across Boroughs**:
+#### **Key Observations**:
 
 1.  **Bronx**:
     -   The ZIP codes **10457 and 10458** show **higher rat density** (above 12,000) while also exhibiting a significant number of restaurants with **Grade B and C**.
@@ -522,9 +522,8 @@ This finding aligns with my analysis, which shows a notable correlation between 
 -   **Preventative Measures**: To mitigate rat infestations, stricter enforcement of sanitation protocols for outdoor seating areas is necessary, especially in periods of increased outdoor dining activity.
 
 #### **Conclusion**:
-    
-    We can see a positive relationship between the increase in outdoor seating violations and rat infestation, particularly in 2024.
-    
+We can see a positive relationship between the increase in outdoor seating violations and rat infestation, particularly in 2024.
+
 ------------------------------------------------------------------------
 
 ## Restaurants: A Vital Part of NYC and Their Role in Rat Infestation
