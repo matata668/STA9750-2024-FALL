@@ -1,7 +1,6 @@
 ---
 title: "Final Individual Report"
 author: "Aachal Ghimire"
-date: "2024-12-08"
 output: html_document
 ---
 
@@ -326,7 +325,7 @@ animated_map <- ggplot() +
                   size = 3) +
   
   # Titles and captions
-  labs(title = "High-Density Restaurant and Rat Population Areas in NYC",
+  labs(title = "Restaurant and Rat Infestation in NYC",
        subtitle = "Sequential display of ZIP Codes with high density",
        caption = "Data Source: NYC Open Data & tigris") +
   
@@ -337,9 +336,9 @@ animated_map <- ggplot() +
   theme_minimal()
 
 # Step 5: Render and Save the Animation ----------------------------------------
-# animate(animated_map, nframes = 50, fps = 2, width = 600, height = 400, renderer = gifski_renderer())
+#animate(animated_map, nframes = 50, fps = 2, width = 600, height = 400, renderer = gifski_renderer())
 
-# anim_save("nyc_high_density_animation.gif")
+#anim_save("nyc_high_density_animation.gif")
 # 
 # knitr::include_graphics("nyc_high_density_animation.gif")
 
@@ -347,23 +346,23 @@ animated_map <- ggplot() +
 
 ```
 ![](nyc_high_density_animation.gif){width=800px}
-#### **Key Observations**:
+### **Key Observations**:
 
 1.  **Bronx**:
-    -   The ZIP codes **10457 and 10458** show **higher rat density** (above 12,000) while also exhibiting a significant number of restaurants with **Grade B and C**.
+    -   The ZIP codes **10457 and 10458** show **higher rat sighting** (above 12,000) while also exhibiting a significant number of restaurants with **Grade B and C**.
     -   There seems to be a noticeable link between the increase in rat activity and areas with more restaurants receiving lower grades.
 2.  **Brooklyn**:
-    -   ZIP codes **11215 and 11222** show the highest rat densities (over 20,000), corresponding to relatively high numbers of restaurants with **Grade B and C**.
+    -   ZIP codes **11215 and 11222** show the highest rat activity (over 20,000), corresponding to relatively high numbers of restaurants with **Grade B and C**.
     -   Rat infestations in Brooklyn appear to cluster in specific ZIP codes, suggesting that localized waste management issues may be contributing to the problem.
 3.  **Manhattan**:
     -   ZIP codes **10013 and 10036** have both the highest number of restaurants with **Grade B and C** (over 600) and noticeable rat activity.
-    -   Despite a significant concentration of lower-graded restaurants, rat densities remain moderate compared to other boroughs, suggesting **more effective urban management** in some areas.
+    -   Despite a significant concentration of lower-graded restaurants, rat sighting remain moderate compared to other boroughs, suggesting **more effective urban management** in some areas.
 4.  **Queens**:
-    -   ZIP codes **11385 and 11373** show the **highest rat densities** and a considerable number of restaurants with **Grade B and C**.
-    -   Rat density appears to peak sharply in specific ZIP codes, correlating with localized concentrations of lower-graded restaurants.
+    -   ZIP codes **11385 and 11373** show the **highest rat sighting** and a considerable number of restaurants with **Grade B and C**.
+    -   Rat activity appears to peak sharply in specific ZIP codes, correlating with localized concentrations of lower-graded restaurants.
 5.  **Staten Island**:
     -   Staten Island has the **lowest rat ** across all ZIP codes, with a small number of lower-graded restaurants.
-    -   ZIP code **10301** has the highest rat density (600) but relatively fewer restaurants compared to other boroughs.
+    -   ZIP code **10301** has the highest rat sighting (600) but relatively fewer restaurants compared to other boroughs.
     
 #### **Learnings**:
 
@@ -383,14 +382,105 @@ animated_map <- ggplot() +
 The analysis highlights a **positive relationship** between the number of restaurants with lower grades (B and C) and rat activity density, especially in high-density boroughs like the **Bronx, Brooklyn, and Queens**. Effective sanitation practices and targeted interventions in identified ZIP codes are critical to addressing this issue.
 
 
+------------------------------------------------------------------------
+
+## Restaurants: A Vital Part of NYC and Their Role in Rat Infestation
+
+Restaurants are a key part of NYC’s culture and economy, providing jobs, tourism, and vibrant dining spaces. However, poor sanitation and the rise of outdoor dining have contributed to rat infestations by increasing food waste and trash.
+
+Now, we will analyze the correlation between restaurant density and rat population across NYC boroughs. Higher restaurant density, especially those with poor grades (B and C), may attract and sustain larger rat populations, highlighting the connection between restaurant presence and rat infestations in NYC.
+
+#### **Hypothesis**:
+
+-   **Higher restaurant density contributes to increased rat activity** due to improper waste management, food availability, and urban environmental factors.
+
+```{r warning=FALSE, message=FALSE}
+#| code-fold: true
+#| code-summary: "show the code"
+
+# Step 1: Prepare ZIP Code Mapping -------------------------------------------
+zipcode_mapping <- zipcode_mapping %>%
+  mutate(ZIPCODE = str_trim(as.character(Zipcode)),
+         BOROUGH = str_trim(as.character(Borough)))
+
+# Step 2: Fill NA or Invalid BORO in Restaurant Data -------------------------
+restaurant_filtered_zb <- restaurant_filtered_data %>%
+  mutate(ZIPCODE = str_trim(as.character(ZIPCODE)),  # Trim and convert ZIPCODE
+         BORO = ifelse(is.na(BORO) | BORO == "0", 
+                       coalesce(zipcode_mapping$BOROUGH[match(ZIPCODE, zipcode_mapping$ZIPCODE)], BORO),
+                       BORO))
+
+# Step 3: Fill NA or Invalid BOROUGH in Rat Data -----------------------------
+rats_filtered_zb <- rats_filtered_data %>%
+  mutate(ZIP_CODE = str_trim(as.character(ZIP_CODE)),  # Trim and convert ZIP_CODE
+         BOROUGH = coalesce(zipcode_mapping$BOROUGH[match(ZIP_CODE, zipcode_mapping$ZIPCODE)], BOROUGH))
+
+
+# Step 2: Filter Rat Data for Rat Activity -----------------------------------
+rat_activity <- rats_filtered_zb %>%
+  filter(!RESULT %in% c("Passed", "Failed for Other R")) %>%
+  filter(!is.na(LATITUDE) & !is.na(LONGITUDE)) %>%
+  group_by(BOROUGH) %>%
+  summarise(Rat_Activity_Count = n())
+
+# Step 3: Aggregate Restaurant Data by Borough ------------------------------
+restaurant_density <- restaurant_filtered_zb %>%
+  filter(!is.na(Latitude) & !is.na(Longitude)) %>%
+  group_by(BORO) %>%
+  summarise(Restaurant_Count = n())
+
+# Step 4: Merge Data ---------------------------------------------------------
+density_data <- restaurant_density %>%
+  mutate(BORO = str_to_lower(str_trim(BORO))) %>%
+  inner_join(
+    rat_activity %>%
+      mutate(BOROUGH = str_to_lower(str_trim(BOROUGH))),
+    by = c("BORO" = "BOROUGH")
+  )
+
+# Step 5: Visualization ------------------------------------------------------
+
+ggplot(density_data, aes(x = Restaurant_Count, y = Rat_Activity_Count, label = BORO)) +
+  geom_point(size = 4, color = "blue") +                               # Scatter points
+  geom_smooth(method = "lm", color = "red", se = TRUE) +               # Trendline with confidence interval
+  geom_text_repel(aes(label = paste0(BORO, " (", Restaurant_Count, ", ", Rat_Activity_Count, ")")),
+                  size = 4, color = "black", box.padding = 0.5) +      # Add BORO and coordinates
+  scale_y_continuous(labels = comma) +                                 # Format y-axis as whole numbers
+  scale_x_continuous(labels = comma) +                                 # Format x-axis as whole numbers
+  labs(title = "Density of Restaurants vs Rat Activity Inspection",
+       subtitle = "Analyzing Relationship Between Restaurants and Rat Infestation Rates",
+       x = "Number of Restaurants (Density)",
+       y = "Number of Rat Activity Inspections") +
+  theme_minimal()
+
+
+```
+
+#### **Key Observations**:
+
+1.  **Positive Correlation**:
+    -   The graph shows a slight positive correlation between the **number of restaurants** (restaurant density) and the **number of rat activity inspections**.
+    -   Boroughs with higher restaurant density, such as **Manhattan** and **Brooklyn**, also exhibit higher rat activity inspections.
+2.  **Manhattan and Brooklyn**:
+    -   These boroughs have the **highest restaurant densities** (e.g., Manhattan: \~94,661 restaurants) and **significant rat activity counts** (e.g., 136,963 inspections).
+    -   This suggests that areas with concentrated restaurant activity may experience increased rat infestations due to factors such as waste generation.
+3.  **Low-Density Areas**:
+    -   **Staten Island** has the lowest restaurant density (\~9,218 restaurants) and rat activity inspections (\~2,049). This aligns with the general trend that lower restaurant density areas tend to have lower rat activity.
+4.  **Outliers**:
+    -   The **Bronx** appears to have a higher number of rat activity inspections relative to its restaurant density (\~23,274 restaurants, \~96,498 inspections). This could indicate other contributing factors, such as waste management issues or urban infrastructure challenges.
+
+
+#### **Learning**:
+
+-   **Targeted Waste Management Policies**: Boroughs with higher restaurant density, like Manhattan and Brooklyn, require stricter waste management practices to mitigate rat infestations.
+-   **Further Investigation**: The Bronx's higher rat activity relative to restaurant density warrants further analysis into non-restaurant-related factors contributing to infestations.
 
 ------------------------------------------------------------------------
 
 ## Outdoor dining and its impact on Rat infestation in NYC
 
-Outdoor dining in New York City became a significant part of the restaurant scene, particularly during the COVID-19 pandemic, when it was rapidly expanded to allow restaurants to operate on sidewalks, streets, and other open spaces. While this initiative provided safer dining options and supported businesses, it also brought challenges related to sanitation and waste management. Food scraps, improperly stored trash, and debris from outdoor setups created an environment that attracted pests, particularly rats, leading to increased health code violations and rat sightings.
 
-To analyze if outdoor dining has caused an increase in rat infestations, we will compare rat sightings near outdoor dining violations over time. By identifying outdoor seating violations and checking for rat inspections within a 100-meter radius, we can observe patterns and trends. Specifically, we will focus on the pandemic years (2020-2022) when outdoor dining expanded significantly, to determine if rat infestation rates increased in these areas compared to previous years.
+Outdoor dining in NYC, expanded during the COVID-19 pandemic, supported businesses but led to sanitation issues like food scraps and poorly stored trash, attracting rats and increasing health violations. To assess its impact on rat infestations, we analyzed rat sightings within a 100-meter radius of outdoor dining violations during 2020-2022, identifying trends and comparing infestation rates to prior years.
 
 #### **Hypothesis**:
 
@@ -524,101 +614,8 @@ This finding aligns with my analysis, which shows a notable correlation between 
 #### **Conclusion**:
 We can see a positive relationship between the increase in outdoor seating violations and rat infestation, particularly in 2024.
 
-------------------------------------------------------------------------
-
-## Restaurants: A Vital Part of NYC and Their Role in Rat Infestation
-
-Restaurants are a key part of NYC’s culture and economy, providing jobs, tourism, and vibrant dining spaces. However, poor sanitation and the rise of outdoor dining have contributed to rat infestations by increasing food waste and trash.
-
-Now, we will analyze the correlation between restaurant density and rat population across NYC boroughs. Higher restaurant density, especially those with poor grades (B and C), may attract and sustain larger rat populations, highlighting the connection between restaurant presence and rat infestations in NYC.
-
-#### **Hypothesis**:
-
--   **Higher restaurant density contributes to increased rat activity** due to improper waste management, food availability, and urban environmental factors.
-
-```{r warning=FALSE, message=FALSE}
-#| code-fold: true
-#| code-summary: "show the code"
-
-# Step 1: Prepare ZIP Code Mapping -------------------------------------------
-zipcode_mapping <- zipcode_mapping %>%
-  mutate(ZIPCODE = str_trim(as.character(Zipcode)),
-         BOROUGH = str_trim(as.character(Borough)))
-
-# Step 2: Fill NA or Invalid BORO in Restaurant Data -------------------------
-restaurant_filtered_zb <- restaurant_filtered_data %>%
-  mutate(ZIPCODE = str_trim(as.character(ZIPCODE)),  # Trim and convert ZIPCODE
-         BORO = ifelse(is.na(BORO) | BORO == "0", 
-                       coalesce(zipcode_mapping$BOROUGH[match(ZIPCODE, zipcode_mapping$ZIPCODE)], BORO),
-                       BORO))
-
-# Step 3: Fill NA or Invalid BOROUGH in Rat Data -----------------------------
-rats_filtered_zb <- rats_filtered_data %>%
-  mutate(ZIP_CODE = str_trim(as.character(ZIP_CODE)),  # Trim and convert ZIP_CODE
-         BOROUGH = coalesce(zipcode_mapping$BOROUGH[match(ZIP_CODE, zipcode_mapping$ZIPCODE)], BOROUGH))
-
-
-# Step 2: Filter Rat Data for Rat Activity -----------------------------------
-rat_activity <- rats_filtered_zb %>%
-  filter(!RESULT %in% c("Passed", "Failed for Other R")) %>%
-  filter(!is.na(LATITUDE) & !is.na(LONGITUDE)) %>%
-  group_by(BOROUGH) %>%
-  summarise(Rat_Activity_Count = n())
-
-# Step 3: Aggregate Restaurant Data by Borough ------------------------------
-restaurant_density <- restaurant_filtered_zb %>%
-  filter(!is.na(Latitude) & !is.na(Longitude)) %>%
-  group_by(BORO) %>%
-  summarise(Restaurant_Count = n())
-
-# Step 4: Merge Data ---------------------------------------------------------
-density_data <- restaurant_density %>%
-  mutate(BORO = str_to_lower(str_trim(BORO))) %>%
-  inner_join(
-    rat_activity %>%
-      mutate(BOROUGH = str_to_lower(str_trim(BOROUGH))),
-    by = c("BORO" = "BOROUGH")
-  )
-
-# Step 5: Visualization ------------------------------------------------------
-
-ggplot(density_data, aes(x = Restaurant_Count, y = Rat_Activity_Count, label = BORO)) +
-  geom_point(size = 4, color = "blue") +                               # Scatter points
-  geom_smooth(method = "lm", color = "red", se = TRUE) +               # Trendline with confidence interval
-  geom_text_repel(aes(label = paste0(BORO, " (", Restaurant_Count, ", ", Rat_Activity_Count, ")")),
-                  size = 4, color = "black", box.padding = 0.5) +      # Add BORO and coordinates
-  scale_y_continuous(labels = comma) +                                 # Format y-axis as whole numbers
-  scale_x_continuous(labels = comma) +                                 # Format x-axis as whole numbers
-  labs(title = "Density of Restaurants vs Rat Activity",
-       subtitle = "Analyzing Relationship Between Restaurants and Rat Infestation Rates",
-       x = "Number of Restaurants (Density)",
-       y = "Number of Rat Activity Inspections") +
-  theme_minimal()
-
-
-```
-
-#### **Key Observations**:
-
-1.  **Positive Correlation**:
-    -   The graph shows a slight positive correlation between the **number of restaurants** (restaurant density) and the **number of rat activity inspections**.
-    -   Boroughs with higher restaurant density, such as **Manhattan** and **Brooklyn**, also exhibit higher rat activity inspections.
-2.  **Manhattan and Brooklyn**:
-    -   These boroughs have the **highest restaurant densities** (e.g., Manhattan: \~94,661 restaurants) and **significant rat activity counts** (e.g., 136,963 inspections).
-    -   This suggests that areas with concentrated restaurant activity may experience increased rat infestations due to factors such as waste generation.
-3.  **Low-Density Areas**:
-    -   **Staten Island** has the lowest restaurant density (\~9,218 restaurants) and rat activity inspections (\~2,049). This aligns with the general trend that lower restaurant density areas tend to have lower rat activity.
-4.  **Outliers**:
-    -   The **Bronx** appears to have a higher number of rat activity inspections relative to its restaurant density (\~23,274 restaurants, \~96,498 inspections). This could indicate other contributing factors, such as waste management issues or urban infrastructure challenges.
-
-
-#### **Learning**:
-
--   **Targeted Waste Management Policies**: Boroughs with higher restaurant density, like Manhattan and Brooklyn, require stricter waste management practices to mitigate rat infestations.
--   **Further Investigation**: The Bronx's higher rat activity relative to restaurant density warrants further analysis into non-restaurant-related factors contributing to infestations.
 
 ------------------------------------------------------------------------
-
 
 ## Summary
 

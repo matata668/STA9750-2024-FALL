@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Aachal Ghimire">
+<meta name="dcterms.date" content="2024-12-08">
 
 <title>Final Individual Report – STA 9750 2024 Submission Material</title>
 <style>
@@ -146,6 +147,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           </div>
   </div>
     
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">December 8, 2024</p>
+    </div>
+  </div>
   
     
   </div>
@@ -934,7 +941,7 @@ reliable measure of rat activity by focusing on confirmed rodent sightings or in
 <span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>                  <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
 <span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Titles and captions</span></span>
-<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Restaurant and Rat Infestation in NYC"</span>,</span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"High-Density Restaurant and Rat Population Areas in NYC"</span>,</span>
 <span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Sequential display of ZIP Codes with high density"</span>,</span>
 <span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">"Data Source: NYC Open Data &amp; tigris"</span>) <span class="sc">+</span></span>
 <span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a>  </span>
@@ -945,39 +952,39 @@ reliable measure of rat activity by focusing on confirmed rodent sightings or in
 <span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
 <span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5: Render and Save the Animation ----------------------------------------</span></span>
-<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a><span class="co">#animate(animated_map, nframes = 50, fps = 2, width = 600, height = 400, renderer = gifski_renderer())</span></span>
+<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a><span class="co"># animate(animated_map, nframes = 50, fps = 2, width = 600, height = 400, renderer = gifski_renderer())</span></span>
 <span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a><span class="co">#anim_save("nyc_high_density_animation.gif")</span></span>
+<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a><span class="co"># anim_save("nyc_high_density_animation.gif")</span></span>
 <span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
 <span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a><span class="co"># knitr::include_graphics("nyc_high_density_animation.gif")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p><img src="nyc_high_density_animation.gif" class="img-fluid" width="800"> ### <strong>Key Observations</strong>:</p>
+<p><img src="nyc_high_density_animation.gif" class="img-fluid" width="800"> #### <strong>Key Observations</strong>:</p>
 <ol type="1">
 <li><strong>Bronx</strong>:
 <ul>
-<li>The ZIP codes <strong>10457 and 10458</strong> show <strong>higher rat sighting</strong> (above 12,000) while also exhibiting a significant number of restaurants with <strong>Grade B and C</strong>.</li>
+<li>The ZIP codes <strong>10457 and 10458</strong> show <strong>higher rat density</strong> (above 12,000) while also exhibiting a significant number of restaurants with <strong>Grade B and C</strong>.</li>
 <li>There seems to be a noticeable link between the increase in rat activity and areas with more restaurants receiving lower grades.</li>
 </ul></li>
 <li><strong>Brooklyn</strong>:
 <ul>
-<li>ZIP codes <strong>11215 and 11222</strong> show the highest rat activity (over 20,000), corresponding to relatively high numbers of restaurants with <strong>Grade B and C</strong>.</li>
+<li>ZIP codes <strong>11215 and 11222</strong> show the highest rat densities (over 20,000), corresponding to relatively high numbers of restaurants with <strong>Grade B and C</strong>.</li>
 <li>Rat infestations in Brooklyn appear to cluster in specific ZIP codes, suggesting that localized waste management issues may be contributing to the problem.</li>
 </ul></li>
 <li><strong>Manhattan</strong>:
 <ul>
 <li>ZIP codes <strong>10013 and 10036</strong> have both the highest number of restaurants with <strong>Grade B and C</strong> (over 600) and noticeable rat activity.</li>
-<li>Despite a significant concentration of lower-graded restaurants, rat sighting remain moderate compared to other boroughs, suggesting <strong>more effective urban management</strong> in some areas.</li>
+<li>Despite a significant concentration of lower-graded restaurants, rat densities remain moderate compared to other boroughs, suggesting <strong>more effective urban management</strong> in some areas.</li>
 </ul></li>
 <li><strong>Queens</strong>:
 <ul>
-<li>ZIP codes <strong>11385 and 11373</strong> show the <strong>highest rat sighting</strong> and a considerable number of restaurants with <strong>Grade B and C</strong>.</li>
-<li>Rat activity appears to peak sharply in specific ZIP codes, correlating with localized concentrations of lower-graded restaurants.</li>
+<li>ZIP codes <strong>11385 and 11373</strong> show the <strong>highest rat densities</strong> and a considerable number of restaurants with <strong>Grade B and C</strong>.</li>
+<li>Rat density appears to peak sharply in specific ZIP codes, correlating with localized concentrations of lower-graded restaurants.</li>
 </ul></li>
 <li><strong>Staten Island</strong>:
 <ul>
 <li>Staten Island has the <strong>lowest rat </strong> across all ZIP codes, with a small number of lower-graded restaurants.</li>
-<li>ZIP code <strong>10301</strong> has the highest rat sighting (600) but relatively fewer restaurants compared to other boroughs.</li>
+<li>ZIP code <strong>10301</strong> has the highest rat density (600) but relatively fewer restaurants compared to other boroughs.</li>
 </ul></li>
 </ol>
 </section>
@@ -1006,182 +1013,75 @@ reliable measure of rat activity by focusing on confirmed rodent sightings or in
 <hr>
 </section>
 </section>
-<section id="restaurants-a-vital-part-of-nyc-and-their-role-in-rat-infestation" class="level2">
-<h2 class="anchored" data-anchor-id="restaurants-a-vital-part-of-nyc-and-their-role-in-rat-infestation">Restaurants: A Vital Part of NYC and Their Role in Rat Infestation</h2>
-<p>Restaurants are a key part of NYC’s culture and economy, providing jobs, tourism, and vibrant dining spaces. However, poor sanitation and the rise of outdoor dining have contributed to rat infestations by increasing food waste and trash.</p>
-<p>Now, we will analyze the correlation between restaurant density and rat population across NYC boroughs. Higher restaurant density, especially those with poor grades (B and C), may attract and sustain larger rat populations, highlighting the connection between restaurant presence and rat infestations in NYC.</p>
-<section id="hypothesis-1" class="level4">
-<h4 class="anchored" data-anchor-id="hypothesis-1"><strong>Hypothesis</strong>:</h4>
-<ul>
-<li><strong>Higher restaurant density contributes to increased rat activity</strong> due to improper waste management, food availability, and urban environmental factors.</li>
-</ul>
-<div class="cell">
-<details class="code-fold">
-<summary>show the code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Prepare ZIP Code Mapping -------------------------------------------</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>zipcode_mapping <span class="ot">&lt;-</span> zipcode_mapping <span class="sc">%&gt;%</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ZIPCODE =</span> <span class="fu">str_trim</span>(<span class="fu">as.character</span>(Zipcode)),</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">BOROUGH =</span> <span class="fu">str_trim</span>(<span class="fu">as.character</span>(Borough)))</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Fill NA or Invalid BORO in Restaurant Data -------------------------</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>restaurant_filtered_zb <span class="ot">&lt;-</span> restaurant_filtered_data <span class="sc">%&gt;%</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ZIPCODE =</span> <span class="fu">str_trim</span>(<span class="fu">as.character</span>(ZIPCODE)),  <span class="co"># Trim and convert ZIPCODE</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">BORO =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(BORO) <span class="sc">|</span> BORO <span class="sc">==</span> <span class="st">"0"</span>, </span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">coalesce</span>(zipcode_mapping<span class="sc">$</span>BOROUGH[<span class="fu">match</span>(ZIPCODE, zipcode_mapping<span class="sc">$</span>ZIPCODE)], BORO),</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>                       BORO))</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Fill NA or Invalid BOROUGH in Rat Data -----------------------------</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>rats_filtered_zb <span class="ot">&lt;-</span> rats_filtered_data <span class="sc">%&gt;%</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ZIP_CODE =</span> <span class="fu">str_trim</span>(<span class="fu">as.character</span>(ZIP_CODE)),  <span class="co"># Trim and convert ZIP_CODE</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">BOROUGH =</span> <span class="fu">coalesce</span>(zipcode_mapping<span class="sc">$</span>BOROUGH[<span class="fu">match</span>(ZIP_CODE, zipcode_mapping<span class="sc">$</span>ZIPCODE)], BOROUGH))</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Filter Rat Data for Rat Activity -----------------------------------</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>rat_activity <span class="ot">&lt;-</span> rats_filtered_zb <span class="sc">%&gt;%</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>RESULT <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Passed"</span>, <span class="st">"Failed for Other R"</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(LATITUDE) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(LONGITUDE)) <span class="sc">%&gt;%</span></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(BOROUGH) <span class="sc">%&gt;%</span></span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Rat_Activity_Count =</span> <span class="fu">n</span>())</span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Aggregate Restaurant Data by Borough ------------------------------</span></span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>restaurant_density <span class="ot">&lt;-</span> restaurant_filtered_zb <span class="sc">%&gt;%</span></span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Latitude) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(Longitude)) <span class="sc">%&gt;%</span></span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(BORO) <span class="sc">%&gt;%</span></span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Restaurant_Count =</span> <span class="fu">n</span>())</span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Merge Data ---------------------------------------------------------</span></span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>density_data <span class="ot">&lt;-</span> restaurant_density <span class="sc">%&gt;%</span></span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">BORO =</span> <span class="fu">str_to_lower</span>(<span class="fu">str_trim</span>(BORO))) <span class="sc">%&gt;%</span></span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(</span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    rat_activity <span class="sc">%&gt;%</span></span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">BOROUGH =</span> <span class="fu">str_to_lower</span>(<span class="fu">str_trim</span>(BOROUGH))),</span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"BORO"</span> <span class="ot">=</span> <span class="st">"BOROUGH"</span>)</span>
-<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5: Visualization ------------------------------------------------------</span></span>
-<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(density_data, <span class="fu">aes</span>(<span class="at">x =</span> Restaurant_Count, <span class="at">y =</span> Rat_Activity_Count, <span class="at">label =</span> BORO)) <span class="sc">+</span></span>
-<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span>                               <span class="co"># Scatter points</span></span>
-<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>) <span class="sc">+</span>               <span class="co"># Trendline with confidence interval</span></span>
-<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">paste0</span>(BORO, <span class="st">" ("</span>, Restaurant_Count, <span class="st">", "</span>, Rat_Activity_Count, <span class="st">")"</span>)),</span>
-<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>                  <span class="at">size =</span> <span class="dv">4</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">box.padding =</span> <span class="fl">0.5</span>) <span class="sc">+</span>      <span class="co"># Add BORO and coordinates</span></span>
-<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> comma) <span class="sc">+</span>                                 <span class="co"># Format y-axis as whole numbers</span></span>
-<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> comma) <span class="sc">+</span>                                 <span class="co"># Format x-axis as whole numbers</span></span>
-<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Density of Restaurants vs Rat Activity Inspection"</span>,</span>
-<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Analyzing Relationship Between Restaurants and Rat Infestation Rates"</span>,</span>
-<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Number of Restaurants (Density)"</span>,</span>
-<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Rat Activity Inspections"</span>) <span class="sc">+</span></span>
-<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="individual_report_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="key-observations" class="level4">
-<h4 class="anchored" data-anchor-id="key-observations"><strong>Key Observations</strong>:</h4>
-<ol type="1">
-<li><strong>Positive Correlation</strong>:
-<ul>
-<li>The graph shows a slight positive correlation between the <strong>number of restaurants</strong> (restaurant density) and the <strong>number of rat activity inspections</strong>.</li>
-<li>Boroughs with higher restaurant density, such as <strong>Manhattan</strong> and <strong>Brooklyn</strong>, also exhibit higher rat activity inspections.</li>
-</ul></li>
-<li><strong>Manhattan and Brooklyn</strong>:
-<ul>
-<li>These boroughs have the <strong>highest restaurant densities</strong> (e.g., Manhattan: ~94,661 restaurants) and <strong>significant rat activity counts</strong> (e.g., 136,963 inspections).</li>
-<li>This suggests that areas with concentrated restaurant activity may experience increased rat infestations due to factors such as waste generation.</li>
-</ul></li>
-<li><strong>Low-Density Areas</strong>:
-<ul>
-<li><strong>Staten Island</strong> has the lowest restaurant density (~9,218 restaurants) and rat activity inspections (~2,049). This aligns with the general trend that lower restaurant density areas tend to have lower rat activity.</li>
-</ul></li>
-<li><strong>Outliers</strong>:
-<ul>
-<li>The <strong>Bronx</strong> appears to have a higher number of rat activity inspections relative to its restaurant density (~23,274 restaurants, ~96,498 inspections). This could indicate other contributing factors, such as waste management issues or urban infrastructure challenges.</li>
-</ul></li>
-</ol>
-</section>
-<section id="learning" class="level4">
-<h4 class="anchored" data-anchor-id="learning"><strong>Learning</strong>:</h4>
-<ul>
-<li><strong>Targeted Waste Management Policies</strong>: Boroughs with higher restaurant density, like Manhattan and Brooklyn, require stricter waste management practices to mitigate rat infestations.</li>
-<li><strong>Further Investigation</strong>: The Bronx’s higher rat activity relative to restaurant density warrants further analysis into non-restaurant-related factors contributing to infestations.</li>
-</ul>
-<hr>
-</section>
-</section>
 <section id="outdoor-dining-and-its-impact-on-rat-infestation-in-nyc" class="level2">
 <h2 class="anchored" data-anchor-id="outdoor-dining-and-its-impact-on-rat-infestation-in-nyc">Outdoor dining and its impact on Rat infestation in NYC</h2>
-<p>Outdoor dining in NYC, expanded during the COVID-19 pandemic, supported businesses but led to sanitation issues like food scraps and poorly stored trash, attracting rats and increasing health violations. To assess its impact on rat infestations, we analyzed rat sightings within a 100-meter radius of outdoor dining violations during 2020-2022, identifying trends and comparing infestation rates to prior years.</p>
-<section id="hypothesis-2" class="level4">
-<h4 class="anchored" data-anchor-id="hypothesis-2"><strong>Hypothesis</strong>:</h4>
+<p>Outdoor dining in New York City became a significant part of the restaurant scene, particularly during the COVID-19 pandemic, when it was rapidly expanded to allow restaurants to operate on sidewalks, streets, and other open spaces. While this initiative provided safer dining options and supported businesses, it also brought challenges related to sanitation and waste management. Food scraps, improperly stored trash, and debris from outdoor setups created an environment that attracted pests, particularly rats, leading to increased health code violations and rat sightings.</p>
+<p>To analyze if outdoor dining has caused an increase in rat infestations, we will compare rat sightings near outdoor dining violations over time. By identifying outdoor seating violations and checking for rat inspections within a 100-meter radius, we can observe patterns and trends. Specifically, we will focus on the pandemic years (2020-2022) when outdoor dining expanded significantly, to determine if rat infestation rates increased in these areas compared to previous years.</p>
+<section id="hypothesis-1" class="level4">
+<h4 class="anchored" data-anchor-id="hypothesis-1"><strong>Hypothesis</strong>:</h4>
 <ul>
 <li>The increase in outdoor seating violations after COVID (2020-2022) may have contributed to higher rat infestation rates. This could be due to improper waste management and sanitation practices around outdoor dining areas.</li>
 </ul>
 <div class="cell">
 <details class="code-fold">
 <summary>show the code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(geosphere)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter rat inspections with valid lat/lon and failed results</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>rats_filtered_loc <span class="ot">&lt;-</span> rats_filtered_data <span class="sc">%&gt;%</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(LATITUDE) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(LONGITUDE) <span class="sc">&amp;</span> RESULT <span class="sc">!=</span> <span class="st">"Passed"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">YEAR =</span> <span class="fu">year</span>(<span class="fu">mdy_hms</span>(INSPECTION_DATE)))</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract outdoor seating violations from restaurants</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>outdoor_seating <span class="ot">&lt;-</span> restaurant_filtered_data <span class="sc">%&gt;%</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"outdoor|seating|sidewalk"</span>, <span class="st">`</span><span class="at">VIOLATION DESCRIPTION</span><span class="st">`</span>, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Latitude) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(Longitude)) <span class="sc">%&gt;%</span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">YEAR =</span> <span class="fu">year</span>(<span class="fu">mdy</span>(<span class="st">`</span><span class="at">INSPECTION DATE</span><span class="st">`</span>)))</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Select coordinates for rats and outdoor seating</span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>outdoor_coords <span class="ot">&lt;-</span> outdoor_seating <span class="sc">%&gt;%</span> </span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Latitude, Longitude) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Latitude) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(Longitude)) <span class="sc">%&gt;%</span></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>()</span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>rat_coords <span class="ot">&lt;-</span> rats_filtered_loc <span class="sc">%&gt;%</span> </span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(LATITUDE, LONGITUDE) <span class="sc">%&gt;%</span></span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(LATITUDE) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(LONGITUDE)) <span class="sc">%&gt;%</span></span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>()</span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to check for nearby rats (100 meters)</span></span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>find_rats_nearby <span class="ot">&lt;-</span> <span class="cf">function</span>(outdoor_coords, rat_coords, <span class="at">distance_threshold =</span> <span class="dv">100</span>) {</span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ensure both inputs are matrices with exactly two columns</span></span>
-<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>  rat_coords <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(rat_coords[, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)])</span>
-<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>  outdoor_coords <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(outdoor_coords[, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)])</span>
-<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Validate column names and types</span></span>
-<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">ncol</span>(rat_coords) <span class="sc">!=</span> <span class="dv">2</span> <span class="sc">|</span> <span class="fu">ncol</span>(outdoor_coords) <span class="sc">!=</span> <span class="dv">2</span>) {</span>
-<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">"Error: Inputs must have exactly two columns (latitude, longitude)."</span>)</span>
-<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(outdoor_coords), <span class="cf">function</span>(i) {</span>
-<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>    point <span class="ot">&lt;-</span> outdoor_coords[i, ]  <span class="co"># Current restaurant coordinates</span></span>
-<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>    distances <span class="ot">&lt;-</span> <span class="fu">distHaversine</span>(<span class="fu">matrix</span>(point, <span class="at">nrow =</span> <span class="dv">1</span>), rat_coords)  <span class="co"># Distance to all rat points</span></span>
-<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">any</span>(distances <span class="sc">&lt;=</span> distance_threshold)  <span class="co"># TRUE if within threshold</span></span>
-<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>  })</span>
-<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(result)</span>
-<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the corrected function</span></span>
-<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>outdoor_seating<span class="sc">$</span>RAT_INFESTATION_NEARBY <span class="ot">&lt;-</span> <span class="fu">find_rats_nearby</span>(outdoor_coords, rat_coords)</span>
-<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Select specific columns</span></span>
-<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>selected_columns <span class="ot">&lt;-</span> outdoor_seating <span class="sc">%&gt;%</span></span>
-<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="st">"DBA"</span>,<span class="st">"BORO"</span>,<span class="st">"ZIPCODE"</span>, <span class="st">"YEAR"</span>,<span class="st">`</span><span class="at">VIOLATION CODE</span><span class="st">`</span>, <span class="st">'RAT_INFESTATION_NEARBY'</span>)</span>
-<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the selected columns</span></span>
-<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(selected_columns, <span class="dv">6</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(geosphere)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter rat inspections with valid lat/lon and failed results</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>rats_filtered_loc <span class="ot">&lt;-</span> rats_filtered_data <span class="sc">%&gt;%</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(LATITUDE) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(LONGITUDE) <span class="sc">&amp;</span> RESULT <span class="sc">!=</span> <span class="st">"Passed"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">YEAR =</span> <span class="fu">year</span>(<span class="fu">mdy_hms</span>(INSPECTION_DATE)))</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract outdoor seating violations from restaurants</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>outdoor_seating <span class="ot">&lt;-</span> restaurant_filtered_data <span class="sc">%&gt;%</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">grepl</span>(<span class="st">"outdoor|seating|sidewalk"</span>, <span class="st">`</span><span class="at">VIOLATION DESCRIPTION</span><span class="st">`</span>, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Latitude) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(Longitude)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">YEAR =</span> <span class="fu">year</span>(<span class="fu">mdy</span>(<span class="st">`</span><span class="at">INSPECTION DATE</span><span class="st">`</span>)))</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Select coordinates for rats and outdoor seating</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>outdoor_coords <span class="ot">&lt;-</span> outdoor_seating <span class="sc">%&gt;%</span> </span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Latitude, Longitude) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Latitude) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(Longitude)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>()</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>rat_coords <span class="ot">&lt;-</span> rats_filtered_loc <span class="sc">%&gt;%</span> </span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(LATITUDE, LONGITUDE) <span class="sc">%&gt;%</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(LATITUDE) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(LONGITUDE)) <span class="sc">%&gt;%</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">na.omit</span>()</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to check for nearby rats (100 meters)</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>find_rats_nearby <span class="ot">&lt;-</span> <span class="cf">function</span>(outdoor_coords, rat_coords, <span class="at">distance_threshold =</span> <span class="dv">100</span>) {</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ensure both inputs are matrices with exactly two columns</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>  rat_coords <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(rat_coords[, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)])</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>  outdoor_coords <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(outdoor_coords[, <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>)])</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Validate column names and types</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">ncol</span>(rat_coords) <span class="sc">!=</span> <span class="dv">2</span> <span class="sc">|</span> <span class="fu">ncol</span>(outdoor_coords) <span class="sc">!=</span> <span class="dv">2</span>) {</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="st">"Error: Inputs must have exactly two columns (latitude, longitude)."</span>)</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> <span class="fu">sapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(outdoor_coords), <span class="cf">function</span>(i) {</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>    point <span class="ot">&lt;-</span> outdoor_coords[i, ]  <span class="co"># Current restaurant coordinates</span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>    distances <span class="ot">&lt;-</span> <span class="fu">distHaversine</span>(<span class="fu">matrix</span>(point, <span class="at">nrow =</span> <span class="dv">1</span>), rat_coords)  <span class="co"># Distance to all rat points</span></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">any</span>(distances <span class="sc">&lt;=</span> distance_threshold)  <span class="co"># TRUE if within threshold</span></span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(result)</span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply the corrected function</span></span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>outdoor_seating<span class="sc">$</span>RAT_INFESTATION_NEARBY <span class="ot">&lt;-</span> <span class="fu">find_rats_nearby</span>(outdoor_coords, rat_coords)</span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a><span class="co"># Select specific columns</span></span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>selected_columns <span class="ot">&lt;-</span> outdoor_seating <span class="sc">%&gt;%</span></span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="st">"DBA"</span>,<span class="st">"BORO"</span>,<span class="st">"ZIPCODE"</span>, <span class="st">"YEAR"</span>,<span class="st">`</span><span class="at">VIOLATION CODE</span><span class="st">`</span>, <span class="st">'RAT_INFESTATION_NEARBY'</span>)</span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the selected columns</span></span>
+<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">head</span>(selected_columns, <span class="dv">6</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
@@ -1257,47 +1157,47 @@ reliable measure of rat activity by focusing on confirmed rodent sightings or in
 </div>
 <details class="code-fold">
 <summary>show the code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Group by year and count rat infestations near outdoor seating violations</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>rat_summary <span class="ot">&lt;-</span> outdoor_seating <span class="sc">%&gt;%</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(RAT_INFESTATION_NEARBY <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(YEAR) <span class="sc">%&gt;%</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Rat_Infestations =</span> <span class="fu">n</span>())</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize total outdoor seating violations by year</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>outdoor_summary <span class="ot">&lt;-</span> outdoor_seating <span class="sc">%&gt;%</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(YEAR) <span class="sc">%&gt;%</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Outdoor_Violations =</span> <span class="fu">n</span>())</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine the two summaries</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>combined_summary <span class="ot">&lt;-</span> <span class="fu">full_join</span>(outdoor_summary, rat_summary, <span class="at">by =</span> <span class="st">"YEAR"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">replace_na</span>(<span class="fu">list</span>(<span class="at">Outdoor_Violations =</span> <span class="dv">0</span>, <span class="at">Rat_Infestations =</span> <span class="dv">0</span>))</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualization --------------------------------------------------------------</span></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(combined_summary, <span class="fu">aes</span>(<span class="at">x =</span> YEAR)) <span class="sc">+</span></span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">y =</span> Outdoor_Violations, <span class="at">fill =</span> <span class="st">"Outdoor Violations"</span>), </span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>           <span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> Rat_Infestations, <span class="at">color =</span> <span class="st">"Rat Infestations"</span>), <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Outdoor Violations"</span> <span class="ot">=</span> <span class="st">"steelblue"</span>)) <span class="sc">+</span></span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Rat Infestations"</span> <span class="ot">=</span> <span class="st">"red"</span>)) <span class="sc">+</span></span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rect</span>(<span class="fu">aes</span>(<span class="at">xmin =</span> <span class="dv">2020</span>, <span class="at">xmax =</span> <span class="dv">2022</span>, <span class="at">ymin =</span> <span class="dv">0</span>, <span class="at">ymax =</span> <span class="cn">Inf</span>), </span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>            <span class="at">fill =</span> <span class="st">"gray"</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Impact of Outdoor Seating on Rat Infestation Rates"</span>,</span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Highlighted COVID Period (2020-2022)"</span>,</span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Count"</span>,</span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Legend"</span>, <span class="at">color =</span> <span class="st">"Legend"</span>) <span class="sc">+</span></span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Group by year and count rat infestations near outdoor seating violations</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>rat_summary <span class="ot">&lt;-</span> outdoor_seating <span class="sc">%&gt;%</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(RAT_INFESTATION_NEARBY <span class="sc">==</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(YEAR) <span class="sc">%&gt;%</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Rat_Infestations =</span> <span class="fu">n</span>())</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Summarize total outdoor seating violations by year</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>outdoor_summary <span class="ot">&lt;-</span> outdoor_seating <span class="sc">%&gt;%</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(YEAR) <span class="sc">%&gt;%</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Outdoor_Violations =</span> <span class="fu">n</span>())</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine the two summaries</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>combined_summary <span class="ot">&lt;-</span> <span class="fu">full_join</span>(outdoor_summary, rat_summary, <span class="at">by =</span> <span class="st">"YEAR"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">replace_na</span>(<span class="fu">list</span>(<span class="at">Outdoor_Violations =</span> <span class="dv">0</span>, <span class="at">Rat_Infestations =</span> <span class="dv">0</span>))</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualization --------------------------------------------------------------</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(combined_summary, <span class="fu">aes</span>(<span class="at">x =</span> YEAR)) <span class="sc">+</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="fu">aes</span>(<span class="at">y =</span> Outdoor_Violations, <span class="at">fill =</span> <span class="st">"Outdoor Violations"</span>), </span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>           <span class="at">stat =</span> <span class="st">"identity"</span>, <span class="at">position =</span> <span class="st">"dodge"</span>) <span class="sc">+</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> Rat_Infestations, <span class="at">color =</span> <span class="st">"Rat Infestations"</span>), <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Outdoor Violations"</span> <span class="ot">=</span> <span class="st">"steelblue"</span>)) <span class="sc">+</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Rat Infestations"</span> <span class="ot">=</span> <span class="st">"red"</span>)) <span class="sc">+</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rect</span>(<span class="fu">aes</span>(<span class="at">xmin =</span> <span class="dv">2020</span>, <span class="at">xmax =</span> <span class="dv">2022</span>, <span class="at">ymin =</span> <span class="dv">0</span>, <span class="at">ymax =</span> <span class="cn">Inf</span>), </span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>            <span class="at">fill =</span> <span class="st">"gray"</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Impact of Outdoor Seating on Rat Infestation Rates"</span>,</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Highlighted COVID Period (2020-2022)"</span>,</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Count"</span>,</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>       <span class="at">fill =</span> <span class="st">"Legend"</span>, <span class="at">color =</span> <span class="st">"Legend"</span>) <span class="sc">+</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="individual_report_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="individual_report_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="key-observations-1" class="level4">
-<h4 class="anchored" data-anchor-id="key-observations-1"><strong>Key Observations</strong>:</h4>
+<section id="key-observations" class="level4">
+<h4 class="anchored" data-anchor-id="key-observations"><strong>Key Observations</strong>:</h4>
 <ol type="1">
 <li><strong>Outdoor Violations</strong>:
 <ul>
@@ -1323,8 +1223,8 @@ reliable measure of rat activity by focusing on confirmed rodent sightings or in
 <p>I think we can all agree that during the peak of COVID-19 in 2020, rat populations initially declined due to the closure of restaurants, which limited food availability. Sontag’s article describes reports of starving rats resorting to cannibalism as food sources dwindled. However, the reopening of restaurants, particularly with outdoor dining spaces and street-side cooking, reversed this trend by creating an abundance of food once again. As a result, rats rapidly reappeared, with infestations increasing across neighborhoods.</p>
 <p>This finding aligns with my analysis, which shows a notable correlation between rat activity and outdoor dining violations post-COVID. The lack of adequate waste management in outdoor setups further exacerbated the problem, leading to lawsuits demanding stricter sanitation measures and reconsideration of outdoor dining practices. The issue is not unique to NYC; cities like New Orleans, Chicago, and Los Angeles have reported unprecedented increases in rat sightings following the rise of outdoor dining. These observations emphasize the need for improved waste management strategies to address the unintended consequences of outdoor dining on urban rat infestations.</p>
 </section>
-<section id="learning-1" class="level4">
-<h4 class="anchored" data-anchor-id="learning-1"><strong>Learning</strong>:</h4>
+<section id="learning" class="level4">
+<h4 class="anchored" data-anchor-id="learning"><strong>Learning</strong>:</h4>
 <ul>
 <li><strong>Post-COVID</strong>: The rise/ existing in unauthorized outdoor dining, lack of proper waste management, street cooking, and similar activities have likely exacerbated rat infestations, emphasizing the importance of effective waste management.</li>
 <li><strong>Preventative Measures</strong>: To mitigate rat infestations, stricter enforcement of sanitation protocols for outdoor seating areas is necessary, especially in periods of increased outdoor dining activity.</li>
@@ -1333,6 +1233,114 @@ reliable measure of rat activity by focusing on confirmed rodent sightings or in
 <section id="conclusion-1" class="level4">
 <h4 class="anchored" data-anchor-id="conclusion-1"><strong>Conclusion</strong>:</h4>
 <p>We can see a positive relationship between the increase in outdoor seating violations and rat infestation, particularly in 2024.</p>
+<hr>
+</section>
+</section>
+<section id="restaurants-a-vital-part-of-nyc-and-their-role-in-rat-infestation" class="level2">
+<h2 class="anchored" data-anchor-id="restaurants-a-vital-part-of-nyc-and-their-role-in-rat-infestation">Restaurants: A Vital Part of NYC and Their Role in Rat Infestation</h2>
+<p>Restaurants are a key part of NYC’s culture and economy, providing jobs, tourism, and vibrant dining spaces. However, poor sanitation and the rise of outdoor dining have contributed to rat infestations by increasing food waste and trash.</p>
+<p>Now, we will analyze the correlation between restaurant density and rat population across NYC boroughs. Higher restaurant density, especially those with poor grades (B and C), may attract and sustain larger rat populations, highlighting the connection between restaurant presence and rat infestations in NYC.</p>
+<section id="hypothesis-2" class="level4">
+<h4 class="anchored" data-anchor-id="hypothesis-2"><strong>Hypothesis</strong>:</h4>
+<ul>
+<li><strong>Higher restaurant density contributes to increased rat activity</strong> due to improper waste management, food availability, and urban environmental factors.</li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>show the code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Prepare ZIP Code Mapping -------------------------------------------</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>zipcode_mapping <span class="ot">&lt;-</span> zipcode_mapping <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ZIPCODE =</span> <span class="fu">str_trim</span>(<span class="fu">as.character</span>(Zipcode)),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">BOROUGH =</span> <span class="fu">str_trim</span>(<span class="fu">as.character</span>(Borough)))</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Fill NA or Invalid BORO in Restaurant Data -------------------------</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>restaurant_filtered_zb <span class="ot">&lt;-</span> restaurant_filtered_data <span class="sc">%&gt;%</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ZIPCODE =</span> <span class="fu">str_trim</span>(<span class="fu">as.character</span>(ZIPCODE)),  <span class="co"># Trim and convert ZIPCODE</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">BORO =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(BORO) <span class="sc">|</span> BORO <span class="sc">==</span> <span class="st">"0"</span>, </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                       <span class="fu">coalesce</span>(zipcode_mapping<span class="sc">$</span>BOROUGH[<span class="fu">match</span>(ZIPCODE, zipcode_mapping<span class="sc">$</span>ZIPCODE)], BORO),</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                       BORO))</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Fill NA or Invalid BOROUGH in Rat Data -----------------------------</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>rats_filtered_zb <span class="ot">&lt;-</span> rats_filtered_data <span class="sc">%&gt;%</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ZIP_CODE =</span> <span class="fu">str_trim</span>(<span class="fu">as.character</span>(ZIP_CODE)),  <span class="co"># Trim and convert ZIP_CODE</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">BOROUGH =</span> <span class="fu">coalesce</span>(zipcode_mapping<span class="sc">$</span>BOROUGH[<span class="fu">match</span>(ZIP_CODE, zipcode_mapping<span class="sc">$</span>ZIPCODE)], BOROUGH))</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Filter Rat Data for Rat Activity -----------------------------------</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>rat_activity <span class="ot">&lt;-</span> rats_filtered_zb <span class="sc">%&gt;%</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>RESULT <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Passed"</span>, <span class="st">"Failed for Other R"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(LATITUDE) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(LONGITUDE)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(BOROUGH) <span class="sc">%&gt;%</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Rat_Activity_Count =</span> <span class="fu">n</span>())</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Aggregate Restaurant Data by Borough ------------------------------</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>restaurant_density <span class="ot">&lt;-</span> restaurant_filtered_zb <span class="sc">%&gt;%</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Latitude) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(Longitude)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(BORO) <span class="sc">%&gt;%</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Restaurant_Count =</span> <span class="fu">n</span>())</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4: Merge Data ---------------------------------------------------------</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>density_data <span class="ot">&lt;-</span> restaurant_density <span class="sc">%&gt;%</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">BORO =</span> <span class="fu">str_to_lower</span>(<span class="fu">str_trim</span>(BORO))) <span class="sc">%&gt;%</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inner_join</span>(</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>    rat_activity <span class="sc">%&gt;%</span></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mutate</span>(<span class="at">BOROUGH =</span> <span class="fu">str_to_lower</span>(<span class="fu">str_trim</span>(BOROUGH))),</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"BORO"</span> <span class="ot">=</span> <span class="st">"BOROUGH"</span>)</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 5: Visualization ------------------------------------------------------</span></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(density_data, <span class="fu">aes</span>(<span class="at">x =</span> Restaurant_Count, <span class="at">y =</span> Rat_Activity_Count, <span class="at">label =</span> BORO)) <span class="sc">+</span></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">4</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span>                               <span class="co"># Scatter points</span></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>) <span class="sc">+</span>               <span class="co"># Trendline with confidence interval</span></span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_repel</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">paste0</span>(BORO, <span class="st">" ("</span>, Restaurant_Count, <span class="st">", "</span>, Rat_Activity_Count, <span class="st">")"</span>)),</span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>                  <span class="at">size =</span> <span class="dv">4</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">box.padding =</span> <span class="fl">0.5</span>) <span class="sc">+</span>      <span class="co"># Add BORO and coordinates</span></span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> comma) <span class="sc">+</span>                                 <span class="co"># Format y-axis as whole numbers</span></span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> comma) <span class="sc">+</span>                                 <span class="co"># Format x-axis as whole numbers</span></span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Density of Restaurants vs Rat Activity"</span>,</span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Analyzing Relationship Between Restaurants and Rat Infestation Rates"</span>,</span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Number of Restaurants (Density)"</span>,</span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of Rat Activity Inspections"</span>) <span class="sc">+</span></span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="individual_report_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="key-observations-1" class="level4">
+<h4 class="anchored" data-anchor-id="key-observations-1"><strong>Key Observations</strong>:</h4>
+<ol type="1">
+<li><strong>Positive Correlation</strong>:
+<ul>
+<li>The graph shows a slight positive correlation between the <strong>number of restaurants</strong> (restaurant density) and the <strong>number of rat activity inspections</strong>.</li>
+<li>Boroughs with higher restaurant density, such as <strong>Manhattan</strong> and <strong>Brooklyn</strong>, also exhibit higher rat activity inspections.</li>
+</ul></li>
+<li><strong>Manhattan and Brooklyn</strong>:
+<ul>
+<li>These boroughs have the <strong>highest restaurant densities</strong> (e.g., Manhattan: ~94,661 restaurants) and <strong>significant rat activity counts</strong> (e.g., 136,963 inspections).</li>
+<li>This suggests that areas with concentrated restaurant activity may experience increased rat infestations due to factors such as waste generation.</li>
+</ul></li>
+<li><strong>Low-Density Areas</strong>:
+<ul>
+<li><strong>Staten Island</strong> has the lowest restaurant density (~9,218 restaurants) and rat activity inspections (~2,049). This aligns with the general trend that lower restaurant density areas tend to have lower rat activity.</li>
+</ul></li>
+<li><strong>Outliers</strong>:
+<ul>
+<li>The <strong>Bronx</strong> appears to have a higher number of rat activity inspections relative to its restaurant density (~23,274 restaurants, ~96,498 inspections). This could indicate other contributing factors, such as waste management issues or urban infrastructure challenges.</li>
+</ul></li>
+</ol>
+</section>
+<section id="learning-1" class="level4">
+<h4 class="anchored" data-anchor-id="learning-1"><strong>Learning</strong>:</h4>
+<ul>
+<li><strong>Targeted Waste Management Policies</strong>: Boroughs with higher restaurant density, like Manhattan and Brooklyn, require stricter waste management practices to mitigate rat infestations.</li>
+<li><strong>Further Investigation</strong>: The Bronx’s higher rat activity relative to restaurant density warrants further analysis into non-restaurant-related factors contributing to infestations.</li>
+</ul>
 <hr>
 </section>
 </section>

@@ -8,9 +8,6 @@ output: html_document
 
 
 
-
-
-
 # Do restaurants play a significant role in contribution to rat infestation?
 
 New York City restaurant's persistent struggle with rat infestations has raised concerns about various contributing factors, particularly the role of restaurants. By their nature, restaurants generate significant food waste, and when sanitation practices are inadequate, they create ideal conditions for rats to thrive. This research examines the correlation between restaurant sanitation grades (B and C) and rat activity, as well as the influence of restaurant density on reported rat sightings across neighborhoods.
@@ -20,9 +17,6 @@ The study also explores the impact of outdoor dining, which expanded significant
 Through this analysis, we seek to identify patterns and relationships that highlight how restaurant practices contribute to urban rat populations. These insights are critical for developing targeted interventions to mitigate rat infestations and improve public health across NYC neighborhoods.
 
 ### Libraries used
-
-
-
 
 
 
@@ -57,13 +51,7 @@ library(knitr)
 
 
 
-
-
-
 ### Loading the necessary data
-
-
-
 
 
 
@@ -95,9 +83,6 @@ if (!dir.exists(data_directory)) {
 
 
 
-
-
-
 **Data Sources and Rationale **
 
 We are automating data analysis using two publicly available data sets from NYC Open Data:
@@ -118,9 +103,6 @@ We focus on inspection data from 2019, extracting relevant columns and combining
 Inspection Bias: The data set does not indicate the absence of rats in areas that were not inspected. This can create an illusion of lower rat activity in neighborhoods with fewer inspections. Similarly, areas with higher rates of active rat signs may reflect more frequent inspections rather than a genuinely higher rat population.
 
 Missing Data: A significant number of empty rows exist within the datasets, which necessitates careful and thorough cleaning to ensure the accuracy and reliability of our analysis. By addressing these limitations and ensuring a robust data-cleaning process, we aim to produce meaningful insights into rat infestation patterns and their correlations with restaurant inspection data.
-
-
-
 
 
 
@@ -173,9 +155,6 @@ kable(head( restaurant_filtered_data,5))
 
 
 
-
-
-
 ## Correlation between poor restaurant sanitation and increased rat activity
 
 #### **Hypothesis:**
@@ -204,9 +183,6 @@ To address the limitations of missing data and analyze the relationship between 
 The cleaned restaurant sanitation data and rat density data were merged using ZIP Codes as the key. This integration allowed us to directly compare the number of restaurants with lower sanitation grades to rat activity within each ZIP Code.
 
 This process ensured a comprehensive analysis of how poor sanitation practices in restaurants might correlate with increased rat infestations across New York City neighborhoods.
-
-
-
 
 
 
@@ -396,9 +372,6 @@ animated_map <- ggplot() +
 
 
 
-
-
-
 ![](nyc_high_density_animation.gif){width=800px}
 #### **Key Observations**:
 
@@ -448,9 +421,6 @@ To analyze if outdoor dining has caused an increase in rat infestations, we will
 #### **Hypothesis**:
 
 -   The increase in outdoor seating violations after COVID (2020-2022) may have contributed to higher rat infestation rates. This could be due to improper waste management and sanitation practices around outdoor dining areas.
-
-
-
 
 
 
@@ -554,9 +524,6 @@ ggplot(combined_summary, aes(x = YEAR)) +
 
 
 
-
-
-
 #### **Key Observations**:
 
 1.  **Outdoor Violations**:
@@ -600,9 +567,6 @@ Now, we will analyze the correlation between restaurant density and rat populati
 #### **Hypothesis**:
 
 -   **Higher restaurant density contributes to increased rat activity** due to improper waste management, food availability, and urban environmental factors.
-
-
-
 
 
 
@@ -672,9 +636,6 @@ ggplot(density_data, aes(x = Restaurant_Count, y = Rat_Activity_Count, label = B
 
 
 
-
-
-
 #### **Key Observations**:
 
 1.  **Positive Correlation**:
@@ -736,5 +697,4 @@ Our analysis has revealed significant correlations between poor restaurant grade
 4. Temporal Trends and Longitudinal Analysis
 
 Expand the analysis to include multi-year data to examine how rat activity changes over time, particularly before, during, and after the COVID-19 pandemic. Investigating seasonal trends will also help determine when rat infestations peak and how outdoor dining contributes to this cycle.
-
 
