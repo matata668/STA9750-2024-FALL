@@ -218,12 +218,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><a href="https://data.cityofnewyork.us/Health/DOHMH-New-York-City-Restaurant-Inspection-Results/43nn-pn8j/data">DOHMH New York City Restaurant Inspection Results</a></p></li>
 <li><p><a href="https://data.cityofnewyork.us/Health/Rats/idp8-qjf7">Rats activity recorded in restaurants by borough</a></p></li>
 </ul>
-<p>We chose these data sets because they contain detailed information about rat infestations in New York City, collected by the NYC Department of Health and Mental Hygiene (DOHMH), Division of Environmental Health Pest Control. By leveraging this data, we aim to analyze the prevalence and distribution of rat activity across various NYC neighborhoods.</p>
-<p><strong>Methodology</strong></p>
-<p>We focus on inspection data from 2019, extracting relevant columns and combining the two data sets using zip codes as the common key for integration. The combined data is then cleaned and pre-processed to align with the requirements of our analysis.</p>
+<p>We selected these datasets from the NYC Department of Health and Mental Hygiene for detailed information on rat infestations. Using 2019 inspection data, we integrated and cleaned the data by zip codes to analyze rat activity across neighborhoods.</p>
 <p><strong>Data Limitations</strong></p>
-<p>Inspection Bias: The data set does not indicate the absence of rats in areas that were not inspected. This can create an illusion of lower rat activity in neighborhoods with fewer inspections. Similarly, areas with higher rates of active rat signs may reflect more frequent inspections rather than a genuinely higher rat population.</p>
-<p>Missing Data: A significant number of empty rows exist within the datasets, which necessitates careful and thorough cleaning to ensure the accuracy and reliability of our analysis. By addressing these limitations and ensuring a robust data-cleaning process, we aim to produce meaningful insights into rat infestation patterns and their correlations with restaurant inspection data.</p>
+<p>Inspection Bias: Areas with fewer inspections may appear to have lower rat activity, while frequent inspections may inflate reported rat signs. Missing Data: Significant gaps require careful cleaning to ensure accuracy. Addressing these issues, we aim to uncover meaningful patterns and correlations with restaurant inspection data.</p>
 <div class="cell" data-messages="false">
 <details class="code-fold">
 <summary>show the code</summary>
@@ -681,24 +678,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="correlation-between-poor-restaurant-sanitation-and-increased-rat-activity" class="level2">
 <h2 class="anchored" data-anchor-id="correlation-between-poor-restaurant-sanitation-and-increased-rat-activity">Correlation between poor restaurant sanitation and increased rat activity</h2>
-<section id="hypothesis" class="level4">
-<h4 class="anchored" data-anchor-id="hypothesis"><strong>Hypothesis:</strong></h4>
-<ul>
-<li>Boroughs with a higher number of <strong>Grade B and C restaurants</strong> are more likely to experience elevated <strong>rat sighting</strong>, particularly in localized ZIP codes. Poor sanitation practices associated with lower restaurant grades likely contribute to rat infestations.</li>
-</ul>
-<p>To address the limitations of missing data and analyze the relationship between poor restaurant sanitation and rat activity, we focused on restaurants with Grades B and C and rat density across ZIP Codes in the five boroughs of New York City: Bronx, Brooklyn, Manhattan, Queens, and Staten Island.</p>
+<p><strong>Hypothesis:</strong> Boroughs with more Grade B and C restaurants are likely to have higher rat sightings, particularly in specific ZIP codes, due to poor sanitation practices contributing to infestations.</p>
 <p><strong>Data Cleaning and Standardization</strong></p>
 <ol type="1">
-<li><p>ZIP Code Validation: The data was cleaned and standardized to ensure all ZIP Codes were valid and accurately mapped to their respective boroughs using a ZIP</p>
-<p>Code-to-borough mapping file.</p></li>
-<li><p>Restaurant Sanitation Data:</p>
-<p>Restaurants receiving sanitation Grades B and C, which indicate lower sanitation standards, were filtered and counted for each ZIP Code.</p></li>
-<li><p>Rat Density Data: Rat activity data was filtered to exclude inspections resulting in “Passed” or “Failed for Other R” outcomes. This provided a more<br>
-reliable measure of rat activity by focusing on confirmed rodent sightings or infestations.</p></li>
+<li><p>ZIP Code Validation: Ensured all ZIP codes were valid and mapped accurately to their respective boroughs using a ZIP-to-borough mapping file.</p></li>
+<li><p>Restaurant Sanitation Data: Filtered and counted restaurants with Grades B and C for each ZIP code as indicators of lower sanitation standards.</p></li>
+<li><p>Rat Density Data: Focused on confirmed rodent sightings, excluding inspections labeled “Passed” or “Failed for Other R” for reliability.</p></li>
 </ol>
-<p><strong>Merging and Analysis</strong></p>
-<p>The cleaned restaurant sanitation data and rat density data were merged using ZIP Codes as the key. This integration allowed us to directly compare the number of restaurants with lower sanitation grades to rat activity within each ZIP Code.</p>
-<p>This process ensured a comprehensive analysis of how poor sanitation practices in restaurants might correlate with increased rat infestations across New York City neighborhoods.</p>
+<p><strong>Merging and Analysis</strong> Using ZIP codes as the key, restaurant sanitation data and rat density data were merged to analyze correlations between lower sanitation grades and rat activity across NYC neighborhoods. This process provided a clear view of how poor restaurant practices may drive rat infestations.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>show the code</summary>
@@ -952,68 +939,50 @@ reliable measure of rat activity by focusing on confirmed rodent sightings or in
 <span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a><span class="co"># knitr::include_graphics("nyc_high_density_animation.gif")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p><img src="nyc_high_density_animation.gif" class="img-fluid" width="800"> ### <strong>Key Observations</strong>:</p>
-<ol type="1">
-<li><strong>Bronx</strong>:
-<ul>
-<li>The ZIP codes <strong>10457 and 10458</strong> show <strong>higher rat sighting</strong> (above 12,000) while also exhibiting a significant number of restaurants with <strong>Grade B and C</strong>.</li>
-<li>There seems to be a noticeable link between the increase in rat activity and areas with more restaurants receiving lower grades.</li>
-</ul></li>
-<li><strong>Brooklyn</strong>:
-<ul>
-<li>ZIP codes <strong>11215 and 11222</strong> show the highest rat activity (over 20,000), corresponding to relatively high numbers of restaurants with <strong>Grade B and C</strong>.</li>
-<li>Rat infestations in Brooklyn appear to cluster in specific ZIP codes, suggesting that localized waste management issues may be contributing to the problem.</li>
-</ul></li>
-<li><strong>Manhattan</strong>:
-<ul>
-<li>ZIP codes <strong>10013 and 10036</strong> have both the highest number of restaurants with <strong>Grade B and C</strong> (over 600) and noticeable rat activity.</li>
-<li>Despite a significant concentration of lower-graded restaurants, rat sighting remain moderate compared to other boroughs, suggesting <strong>more effective urban management</strong> in some areas.</li>
-</ul></li>
-<li><strong>Queens</strong>:
-<ul>
-<li>ZIP codes <strong>11385 and 11373</strong> show the <strong>highest rat sighting</strong> and a considerable number of restaurants with <strong>Grade B and C</strong>.</li>
-<li>Rat activity appears to peak sharply in specific ZIP codes, correlating with localized concentrations of lower-graded restaurants.</li>
-</ul></li>
-<li><strong>Staten Island</strong>:
-<ul>
-<li>Staten Island has the <strong>lowest rat </strong> across all ZIP codes, with a small number of lower-graded restaurants.</li>
-<li>ZIP code <strong>10301</strong> has the highest rat sighting (600) but relatively fewer restaurants compared to other boroughs.</li>
-</ul></li>
+<p><img src="nyc_high_density_animation.gif" class="img-fluid" width="1200"> #### Key Observations 1. Bronx:</p>
+<p>ZIP codes 10457 and 10458 show high rat sightings (12,000+) and a significant number of Grade B and C restaurants, indicating a clear link between poor sanitation and rat activity. 2. Brooklyn:</p>
+<p>ZIP codes 11215 and 11222 have the highest rat activity (20,000+), clustering in areas with many lower-graded restaurants, suggesting localized waste management issues.</p>
+<ol start="3" type="1">
+<li>Manhattan:</li>
 </ol>
-</section>
-<section id="learnings" class="level4">
-<h4 class="anchored" data-anchor-id="learnings"><strong>Learnings</strong>:</h4>
-<ol type="1">
-<li><strong>Localized Rat Clusters</strong>:
 <ul>
-<li>Rat density is not uniformly distributed; specific ZIP codes within boroughs, such as <strong>10457 (Bronx)</strong> and <strong>11215 (Brooklyn)</strong>, experience disproportionately high rat activity.</li>
-</ul></li>
-<li><strong>Borough-Specific Trends</strong>:
-<ul>
-<li><strong>Manhattan</strong>: Despite high restaurant density, rat activity remains moderate.</li>
-<li><strong>Brooklyn and Bronx</strong>: Exhibit stronger correlations between rat density and restaurants with lower grades.</li>
-<li><strong>Staten Island</strong>: Shows consistently lower rat activity, indicating better overall sanitation.</li>
-</ul></li>
-<li><strong>Targeted Interventions</strong>:
-<ul>
-<li>ZIP codes with high numbers of <strong>Grade B and C restaurants</strong> should be prioritized for <strong>sanitation inspections</strong> and <strong>waste management improvements</strong> to reduce rat activity.</li>
-</ul></li>
+<li>ZIP codes 10013 and 10036 have the most Grade B and C restaurants (600+) but moderate rat sightings, indicating better urban management.</li>
+</ul>
+<ol start="4" type="1">
+<li>Queens:</li>
 </ol>
-</section>
-<section id="conclusion" class="level4">
-<h4 class="anchored" data-anchor-id="conclusion"><strong>Conclusion</strong>:</h4>
-<p>The analysis highlights a <strong>positive relationship</strong> between the number of restaurants with lower grades (B and C) and rat activity density, especially in high-density boroughs like the <strong>Bronx, Brooklyn, and Queens</strong>. Effective sanitation practices and targeted interventions in identified ZIP codes are critical to addressing this issue.</p>
+<p>ZIP codes 11385 and 11373 show high rat sightings and concentrations of lower-graded restaurants, with peaks in specific areas.</p>
+<ol start="5" type="1">
+<li>Staten Island:</li>
+</ol>
+<ul>
+<li>Lowest rat activity overall. ZIP code 10301 has the highest sightings (600) but fewer lower-graded restaurants compared to other boroughs.</li>
+</ul>
+<section id="learnings" class="level3">
+<h3 class="anchored" data-anchor-id="learnings">Learnings</h3>
+<ol type="1">
+<li>Localized Rat Clusters: Rat activity is concentrated in specific ZIP codes, like 10457 (Bronx) and 11215 (Brooklyn).</li>
+<li>Borough-Specific Trends: *Bronx/Brooklyn: Stronger links between rat sightings and lower-graded restaurants.</li>
+</ol>
+<ul>
+<li>Manhattan: Moderate rat activity despite high restaurant density.</li>
+<li>Staten Island: Consistently low rat activity, indicating better sanitation.</li>
+</ul>
+<ol start="3" type="1">
+<li>Targeted Interventions: Focus on ZIP codes with many Grade B and C restaurants to improve sanitation and reduce rat activity.</li>
+</ol>
+<p>###Conclusion</p>
+<p>The analysis shows a positive correlation between lower-graded restaurants and rat activity, particularly in Bronx, Brooklyn, and Queens. Targeted sanitation efforts in high-risk ZIP codes are essential to mitigate the problem.</p>
 <hr>
 </section>
 </section>
 <section id="restaurants-a-vital-part-of-nyc-and-their-role-in-rat-infestation" class="level2">
 <h2 class="anchored" data-anchor-id="restaurants-a-vital-part-of-nyc-and-their-role-in-rat-infestation">Restaurants: A Vital Part of NYC and Their Role in Rat Infestation</h2>
-<p>Restaurants are a key part of NYC’s culture and economy, providing jobs, tourism, and vibrant dining spaces. However, poor sanitation and the rise of outdoor dining have contributed to rat infestations by increasing food waste and trash.</p>
-<p>Now, we will analyze the correlation between restaurant density and rat population across NYC boroughs. Higher restaurant density, especially those with poor grades (B and C), may attract and sustain larger rat populations, highlighting the connection between restaurant presence and rat infestations in NYC.</p>
-<section id="hypothesis-1" class="level4">
-<h4 class="anchored" data-anchor-id="hypothesis-1"><strong>Hypothesis</strong>:</h4>
+<p>Restaurants are essential to NYC’s economy and culture, but poor sanitation and outdoor dining have increased food waste, fueling rat infestations. This analysis examines the link between restaurant density, particularly lower-graded ones (B and C), and rat populations across NYC boroughs.</p>
+<section id="hypothesis" class="level4">
+<h4 class="anchored" data-anchor-id="hypothesis"><strong>Hypothesis</strong>:</h4>
 <ul>
-<li><strong>Higher restaurant density contributes to increased rat activity</strong> due to improper waste management, food availability, and urban environmental factors.</li>
+<li>Higher restaurant density leads to increased rat activity due to improper waste management, food availability, and urban factors.</li>
 </ul>
 <div class="cell">
 <details class="code-fold">
@@ -1087,40 +1056,38 @@ reliable measure of rat activity by focusing on confirmed rodent sightings or in
 <ol type="1">
 <li><strong>Positive Correlation</strong>:
 <ul>
-<li>The graph shows a slight positive correlation between the <strong>number of restaurants</strong> (restaurant density) and the <strong>number of rat activity inspections</strong>.</li>
-<li>Boroughs with higher restaurant density, such as <strong>Manhattan</strong> and <strong>Brooklyn</strong>, also exhibit higher rat activity inspections.</li>
+<li>A slight positive correlation exists between restaurant density and rat activity inspections, with higher densities seen in Manhattan and Brooklyn correlating to increased rat activity.</li>
 </ul></li>
 <li><strong>Manhattan and Brooklyn</strong>:
 <ul>
-<li>These boroughs have the <strong>highest restaurant densities</strong> (e.g., Manhattan: ~94,661 restaurants) and <strong>significant rat activity counts</strong> (e.g., 136,963 inspections).</li>
-<li>This suggests that areas with concentrated restaurant activity may experience increased rat infestations due to factors such as waste generation.</li>
+<li>These boroughs have the highest restaurant densities (e.g., Manhattan: ~94,661 restaurants) and significant rat activity (e.g., ~136,963 inspections), suggesting waste generation contributes to infestations.</li>
 </ul></li>
 <li><strong>Low-Density Areas</strong>:
 <ul>
-<li><strong>Staten Island</strong> has the lowest restaurant density (~9,218 restaurants) and rat activity inspections (~2,049). This aligns with the general trend that lower restaurant density areas tend to have lower rat activity.</li>
+<li>Staten Island has the lowest restaurant density (~9,218 restaurants) and rat inspections (~2,049), aligning with the trend of lower density leading to lower rat activity.</li>
 </ul></li>
 <li><strong>Outliers</strong>:
 <ul>
-<li>The <strong>Bronx</strong> appears to have a higher number of rat activity inspections relative to its restaurant density (~23,274 restaurants, ~96,498 inspections). This could indicate other contributing factors, such as waste management issues or urban infrastructure challenges.</li>
+<li>The Bronx shows disproportionately high rat activity (~96,498 inspections) relative to its restaurant density (~23,274 restaurants), suggesting other factors like waste management or infrastructure issues.</li>
 </ul></li>
 </ol>
 </section>
 <section id="learning" class="level4">
 <h4 class="anchored" data-anchor-id="learning"><strong>Learning</strong>:</h4>
 <ul>
-<li><strong>Targeted Waste Management Policies</strong>: Boroughs with higher restaurant density, like Manhattan and Brooklyn, require stricter waste management practices to mitigate rat infestations.</li>
-<li><strong>Further Investigation</strong>: The Bronx’s higher rat activity relative to restaurant density warrants further analysis into non-restaurant-related factors contributing to infestations.</li>
+<li><p>Improved Waste Management: High-density areas like Manhattan and Brooklyn need stricter waste management to control rat infestations.</p></li>
+<li><p>Further Analysis: The Bronx’s elevated rat activity requires investigation into non-restaurant-related factors.</p></li>
 </ul>
 <hr>
 </section>
 </section>
 <section id="outdoor-dining-and-its-impact-on-rat-infestation-in-nyc" class="level2">
 <h2 class="anchored" data-anchor-id="outdoor-dining-and-its-impact-on-rat-infestation-in-nyc">Outdoor dining and its impact on Rat infestation in NYC</h2>
-<p>Outdoor dining in NYC, expanded during the COVID-19 pandemic, supported businesses but led to sanitation issues like food scraps and poorly stored trash, attracting rats and increasing health violations. To assess its impact on rat infestations, we analyzed rat sightings within a 100-meter radius of outdoor dining violations during 2020-2022, identifying trends and comparing infestation rates to prior years.</p>
-<section id="hypothesis-2" class="level4">
-<h4 class="anchored" data-anchor-id="hypothesis-2"><strong>Hypothesis</strong>:</h4>
+<p>Outdoor dining in NYC, expanded during the COVID-19 pandemic, boosted businesses but led to sanitation issues, such as food scraps and poorly stored trash, attracting rats and increasing health violations. To evaluate its impact, we analyzed rat sightings within a 100-meter radius of outdoor dining violations from 2020-2022, comparing trends to pre-pandemic years.</p>
+<section id="hypothesis-1" class="level4">
+<h4 class="anchored" data-anchor-id="hypothesis-1"><strong>Hypothesis</strong>:</h4>
 <ul>
-<li>The increase in outdoor seating violations after COVID (2020-2022) may have contributed to higher rat infestation rates. This could be due to improper waste management and sanitation practices around outdoor dining areas.</li>
+<li>Increased outdoor dining violations post-COVID (2020-2022) contributed to higher rat infestation rates due to improper waste management and sanitation practices.</li>
 </ul>
 <div class="cell">
 <details class="code-fold">
@@ -1301,75 +1268,61 @@ reliable measure of rat activity by focusing on confirmed rodent sightings or in
 <ol type="1">
 <li><strong>Outdoor Violations</strong>:
 <ul>
-<li>There was a clear increase in outdoor seating violations after 2022.</li>
-<li>The violations appear to be highest in 2024, following a gradual rise from 2022 to 2024.</li>
+<li>Outdoor seating violations increased steadily from 2022, peaking in 2024.</li>
 </ul></li>
 <li><strong>Rat Infestation Rates</strong>:
 <ul>
-<li>Rat infestations near outdoor seating violations also showed a <strong>consistent upward trend</strong>, increasing sharply in 2023 and 2024.</li>
-<li>The correlation suggests that as outdoor seating violations increase, rat infestations also rise.</li>
+<li>Rat infestations near outdoor violations showed a consistent rise, spiking in 2023 and 2024, indicating a clear correlation.</li>
 </ul></li>
 <li><strong>COVID Period (2020-2022)</strong>:
 <ul>
-<li>The shaded gray area highlights the COVID period (2020-2022), where the counts of outdoor seating violations and rat infestations were relatively lower compared to post-COVID years.</li>
-<li>Post-2022, there is a notable rise in both outdoor violations and rat infestations.</li>
+<li>During COVID (2020-2022), both outdoor violations and rat infestations were lower, with a sharp increase observed post-2022.</li>
 </ul></li>
 </ol>
 </section>
 <section id="the-new-normal-ah-rats" class="level4">
 <h4 class="anchored" data-anchor-id="the-new-normal-ah-rats"><a href="https://www.eater.com/22828594/restaurants-more-rats-pandemic">“The new Normal, <em>Ah!! Rats!!</em></a></h4>
 <p><strong>(Relevant article)</strong></p>
-<p>A report by Elazar Sontag in Eater (December 14, 2021) provides critical insights into the rise of rat infestations in New York City post-COVID-19, aligning with my findings on the impact of outdoor dining. The article shares a specific incident at a Brooklyn wine bar where an unusual smell was traced to something decaying beneath the outdoor dining structure, inaccessible without tearing up the entire parklet. This story highlights how outdoor dining setups, while beneficial for restaurants, inadvertently created new habitats for rats by providing shelter and easier access to food waste.</p>
-<p>I think we can all agree that during the peak of COVID-19 in 2020, rat populations initially declined due to the closure of restaurants, which limited food availability. Sontag’s article describes reports of starving rats resorting to cannibalism as food sources dwindled. However, the reopening of restaurants, particularly with outdoor dining spaces and street-side cooking, reversed this trend by creating an abundance of food once again. As a result, rats rapidly reappeared, with infestations increasing across neighborhoods.</p>
-<p>This finding aligns with my analysis, which shows a notable correlation between rat activity and outdoor dining violations post-COVID. The lack of adequate waste management in outdoor setups further exacerbated the problem, leading to lawsuits demanding stricter sanitation measures and reconsideration of outdoor dining practices. The issue is not unique to NYC; cities like New Orleans, Chicago, and Los Angeles have reported unprecedented increases in rat sightings following the rise of outdoor dining. These observations emphasize the need for improved waste management strategies to address the unintended consequences of outdoor dining on urban rat infestations.</p>
+<p>Elazar Sontag’s Eater report (Dec 14, 2021) highlights rising rat infestations in NYC post-COVID-19, aligning with my findings. A Brooklyn wine bar incident revealed outdoor dining structures create rat habitats by providing shelter and food access.</p>
+<p>During COVID-19 restaurant closures in 2020, rat populations declined due to limited food. However, the reopening of outdoor dining and street-side cooking reversed this trend, leading to increased infestations. My analysis also shows a strong correlation between outdoor dining violations and rat activity post-2020.</p>
+<p>Similar trends in cities like New Orleans, Chicago, and Los Angeles stress the need for better waste management.</p>
 </section>
 <section id="learning-1" class="level4">
 <h4 class="anchored" data-anchor-id="learning-1"><strong>Learning</strong>:</h4>
 <ul>
-<li><strong>Post-COVID</strong>: The rise/ existing in unauthorized outdoor dining, lack of proper waste management, street cooking, and similar activities have likely exacerbated rat infestations, emphasizing the importance of effective waste management.</li>
-<li><strong>Preventative Measures</strong>: To mitigate rat infestations, stricter enforcement of sanitation protocols for outdoor seating areas is necessary, especially in periods of increased outdoor dining activity.</li>
+<li><p><strong>Post-COVID</strong>:Poor waste management and outdoor dining worsened rat infestations.</p></li>
+<li><p><strong>Preventative Measures</strong>: Stricter sanitation enforcement is necessary.</p></li>
 </ul>
 </section>
-<section id="conclusion-1" class="level4">
-<h4 class="anchored" data-anchor-id="conclusion-1"><strong>Conclusion</strong>:</h4>
-<p>We can see a positive relationship between the increase in outdoor seating violations and rat infestation, particularly in 2024.</p>
+<section id="conclusion" class="level4">
+<h4 class="anchored" data-anchor-id="conclusion"><strong>Conclusion</strong>:</h4>
+<p>Outdoor dining violations strongly correlate with rising rat infestations, especially by 2024.</p>
 <hr>
 </section>
 </section>
 <section id="summary" class="level2">
 <h2 class="anchored" data-anchor-id="summary">Summary</h2>
-<p>Our analysis demonstrates a clear relationship between rat infestations in NYC and factors such as poor sanitation, restaurant density, and the expansion of outdoor dining. We found that areas with higher concentrations of restaurants, particularly those with grades B and C, tend to experience increased rat activity. Poor waste management, exacerbated by outdoor dining setups, creates conditions that attract and sustain rat populations. Boroughs like Manhattan and Brooklyn, with the highest restaurant density, showed the strongest correlation with rat infestations.</p>
+<p>Our analysis shows a strong link between rat infestations in NYC and factors such as poor sanitation, restaurant density, and outdoor dining expansion. Areas with higher concentrations of Grade B and C restaurants—particularly in boroughs like Manhattan and Brooklyn—experience elevated rat activity. Poor waste management, worsened by outdoor dining setups, creates ideal conditions for rat populations to thrive.</p>
 </section>
 <section id="limitations-of-our-assumptions" class="level2">
 <h2 class="anchored" data-anchor-id="limitations-of-our-assumptions"><strong>Limitations of Our Assumptions</strong></h2>
 <ol type="1">
-<li>Data Quality: Our analysis relies on inspection data, which may not capture all instances of rat activity or sanitation violations. Underreporting or delayed reporting could affect the results.</li>
-<li>Spatial Accuracy: We assume a 100-meter radius for rat sightings around outdoor dining violations, which may not accurately reflect rats’ mobility or the true impact area.</li>
-<li>Causality vs.&nbsp;Correlation: While we found correlations between restaurant density, sanitation, and rat activity, this does not prove direct causality. Other<br>
-underlying factors might contribute to the observed patterns.</li>
-<li>COVID-19 Impact: The unique circumstances of the COVID-19 pandemic, such as temporary outdoor dining policies and changes in waste management services, could distort long-term trends.</li>
+<li><p>Data Quality: Inspection data may underreport rat activity or delays in reporting</p></li>
+<li><p>Spatial Accuracy: A 100-meter radius around outdoor violations may not fully reflect rats’ range.</p></li>
+<li><p>Causality vs.&nbsp;Correlation: Observed links may involve other contributing factors.</p></li>
+<li><p>COVID-19 Impact:</p>
+<p>Temporary policies and altered waste management may distort long-term trends.</p></li>
 </ol>
 <hr>
 </section>
 <section id="proposal-for-future-work" class="level2">
 <h2 class="anchored" data-anchor-id="proposal-for-future-work">Proposal for Future Work</h2>
-<p>Our analysis has revealed significant correlations between poor restaurant grades (B and C), rat activity, restaurant density, and the impact of outdoor dining on rat infestations across NYC neighborhoods. While these findings provide important insights, further work is needed to deepen our understanding and address limitations. Below are key proposals for future work:</p>
 <ol type="1">
-<li>Borough-Level and Neighborhood-Specific Analysis</li>
+<li><p><strong>Local Analysis</strong>: Conduct borough- and neighborhood-level studies to identify hotspots for targeted interventions.</p></li>
+<li><p><strong>City Comparisons</strong>: Compare data with other cities to adopt best practices for rat control and sanitation.</p></li>
+<li><p><strong>Behavior &amp; Policy Impact</strong>: Evaluate public behavior and sanitation policies through surveys to measure their effectiveness.</p></li>
+<li><p><strong>Longitudinal Trends</strong>: Analyze multi-year and seasonal data to assess changes in rat activity, especially pre- and post-COVID.</p></li>
 </ol>
-<p>Conduct a detailed analysis at the borough and neighborhood levels to identify localized trends and specific hotspots. This will help target interventions in areas with the highest rat activity and poor restaurant sanitation.</p>
-<ol start="2" type="1">
-<li>Comparison with Other Cities</li>
-</ol>
-<p>Conduct a comparative analysis with data from other major cities to understand how NYC’s rat infestation problem aligns with or differs from similar urban areas. This can offer best practices for managing sanitation and rat control.</p>
-<ol start="3" type="1">
-<li>Public Behavior and Policy Impact</li>
-</ol>
-<p>Assess the role of public behavior (e.g., littering, improper waste disposal) and evaluate the effectiveness of existing sanitation policies. Surveys or community-level data can provide insights into how public education campaigns and enforcement influence rat activity.</p>
-<ol start="4" type="1">
-<li>Temporal Trends and Longitudinal Analysis</li>
-</ol>
-<p>Expand the analysis to include multi-year data to examine how rat activity changes over time, particularly before, during, and after the COVID-19 pandemic. Investigating seasonal trends will also help determine when rat infestations peak and how outdoor dining contributes to this cycle.</p>
 
 
 </section>
